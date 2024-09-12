@@ -1,4 +1,4 @@
-package com.radlance.timesapp.ui.theme
+package com.radlance.uikit
 
 import androidx.compose.ui.graphics.Color
 

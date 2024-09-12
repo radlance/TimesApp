@@ -21,4 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "TimesApp"
 include(":app")
- 
+include(":features")
+include(":features:time")
+include(":features:time:presentation")
+include(":core")
+include(":core:uikit")

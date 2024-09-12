@@ -1,6 +1,5 @@
-package com.radlance.timesapp.ui.theme
+package com.radlance.uikit
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
