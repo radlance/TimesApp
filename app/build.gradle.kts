@@ -57,4 +57,5 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":core:uikit"))
+    implementation(project(":features:time:presentation"))
 }

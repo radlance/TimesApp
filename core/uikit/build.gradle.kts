@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    api(libs.ui.tooling)
     api(libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.core.ktx)
