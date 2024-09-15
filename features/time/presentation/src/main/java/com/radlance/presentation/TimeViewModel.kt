@@ -68,9 +68,12 @@ class TimeViewModel @Inject constructor(
 
     @SuppressLint("MissingPermission")
     fun getLocation() {
-        fusedClient.lastLocation.addOnSuccessListener {
+        fusedClient.lastLocation.addOnSuccessListener { location ->
+            if (location == null) {
+                return@addOnSuccessListener
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocation(it.latitude, it.longitude, 1) { addresses ->
+                geocoder.getFromLocation(location.latitude, location.longitude, 1) { addresses ->
                     addresses.first().apply {
                         _timeUiState.update { currentState ->
                             currentState.copy(
@@ -82,7 +85,7 @@ class TimeViewModel @Inject constructor(
                 }
             } else {
                 @Suppress("DEPRECATION")
-                geocoder.getFromLocation(it.latitude, it.longitude, 1)?.first()?.apply {
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)?.first()?.apply {
                     _timeUiState.update { currentState ->
                         currentState.copy(
                             country = countryName,

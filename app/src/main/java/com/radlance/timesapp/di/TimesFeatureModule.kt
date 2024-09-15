@@ -1,4 +1,4 @@
-package com.radlance.timesapp
+package com.radlance.timesapp.di
 
 import android.content.Context
 import android.location.Geocoder

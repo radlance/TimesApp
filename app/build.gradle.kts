@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.application)
@@ -57,6 +58,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.material.icons.extended)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.play.services.location)

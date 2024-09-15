@@ -7,12 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import com.radlance.presentation.TimeScreen
 import com.radlance.presentation.TimeViewModel
-import com.radlance.uikit.TimesAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,11 +32,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            TimesAppTheme {
-                Scaffold { innerPadding ->
-                    TimeScreen(viewModel = viewModel, modifier = Modifier.padding(innerPadding))
-                }
-            }
+            TimesApp(timeViewModel = viewModel)
         }
     }
 
