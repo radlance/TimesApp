@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.location.Geocoder
 import android.os.Build
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -23,14 +24,25 @@ import javax.inject.Inject
 @HiltViewModel
 class TimeViewModel @Inject constructor(
     private val fusedClient: FusedLocationProviderClient,
-    private val geocoder: Geocoder
+    private val geocoder: Geocoder,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
     private var job: Job? = null
 
     private val _timeUiState = MutableStateFlow(TimeUiState())
+
     val timeUiState: StateFlow<TimeUiState>
         get() = _timeUiState
 
+
+    init {
+        viewModelScope.launch {
+            userPreferencesRepository.currentLocation.collect { currentLocation ->
+                val (country, city) = currentLocation.split(":")
+                _timeUiState.value = TimeUiState(country = country, city = city)
+            }
+        }
+    }
 
     fun startUpdatingTime() {
         job = CoroutineScope(Dispatchers.Main).launch {
@@ -66,6 +78,12 @@ class TimeViewModel @Inject constructor(
         }
     }
 
+    private fun saveLocation(countryName: String, city: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.saveLocationPreferences("$countryName:$city")
+        }
+    }
+
     @SuppressLint("MissingPermission")
     fun getLocation() {
         fusedClient.lastLocation.addOnSuccessListener { location ->
@@ -75,6 +93,7 @@ class TimeViewModel @Inject constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocation(location.latitude, location.longitude, 1) { addresses ->
                     addresses.first().apply {
+                        saveLocation(countryName, locality)
                         _timeUiState.update { currentState ->
                             currentState.copy(
                                 country = countryName,
