@@ -1,5 +1,7 @@
 package com.radlance.presentation
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -8,6 +10,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +35,7 @@ import com.radlance.uikit.AnalogClockOuterBoxColor
 import com.radlance.uikit.AnalogClockOuterBoxColorDark
 import com.radlance.uikit.AnalogClockSecondHandColor
 import com.radlance.uikit.AnalogClockSecondHandColorDark
+import kotlinx.coroutines.launch
 import kotlin.math.min
 
 @Composable
@@ -36,18 +44,60 @@ fun AnalogClockComponent(
     minute: Int,
     second: Int,
 ) {
-
     val isDarkTheme = isSystemInDarkTheme()
 
     val outerBoxColor = if (isDarkTheme) AnalogClockOuterBoxColorDark else AnalogClockOuterBoxColor
     val innerBoxColor = if (isDarkTheme) AnalogClockInnerBoxColorDark else AnalogClockInnerBoxColor
-    val innerBoxShadow =
-        if (isDarkTheme) AnalogClockInnerBoxShadowDark else AnalogClockInnerBoxShadow
+    val innerBoxShadow = if (isDarkTheme) AnalogClockInnerBoxShadowDark else AnalogClockInnerBoxShadow
     val hourHandColor = if (isDarkTheme) AnalogClockHourHandColorDark else AnalogClockHourHandColor
-    val minuteHandColor =
-        if (isDarkTheme) AnalogClockMinuteHandColorDark else AnalogClockMinuteHandColor
-    val secondHandColor =
-        if (isDarkTheme) AnalogClockSecondHandColorDark else AnalogClockSecondHandColor
+    val minuteHandColor = if (isDarkTheme) AnalogClockMinuteHandColorDark else AnalogClockMinuteHandColor
+    val secondHandColor = if (isDarkTheme) AnalogClockSecondHandColorDark else AnalogClockSecondHandColor
+
+    val hourAnimatable = remember { Animatable(0f) }
+    val minuteAnimatable = remember { Animatable(0f) }
+    val secondAnimatable = remember { Animatable(0f) }
+
+    var isFirstRender by remember { mutableStateOf(true) }
+
+    LaunchedEffect(hour, minute, second) {
+        val hourAngle = (hour % 12 + minute / 60f) / 12f * 360f
+        val minuteAngle = minute / 60f * 360f
+        val secondAngle = second / 60f * 360f
+
+        if (isFirstRender) {
+            hourAnimatable.snapTo(hourAngle)
+            minuteAnimatable.snapTo(minuteAngle)
+            secondAnimatable.snapTo(secondAngle)
+            isFirstRender = false
+        } else {
+            launch {
+                val currentHourAngle = hourAnimatable.value
+                val shortestPath = (hourAngle - currentHourAngle + 360) % 360
+                hourAnimatable.animateTo(
+                    targetValue = currentHourAngle + shortestPath,
+                    animationSpec = tween(durationMillis = 1000)
+                )
+            }
+
+            launch {
+                val currentMinuteAngle = minuteAnimatable.value
+                val shortestPath = (minuteAngle - currentMinuteAngle + 360) % 360
+                minuteAnimatable.animateTo(
+                    targetValue = currentMinuteAngle + shortestPath,
+                    animationSpec = tween(durationMillis = 1000)
+                )
+            }
+
+            launch {
+                val currentSecondAngle = secondAnimatable.value
+                val shortestPath = (secondAngle - currentSecondAngle + 360) % 360
+                secondAnimatable.animateTo(
+                    targetValue = currentSecondAngle + shortestPath,
+                    animationSpec = tween(durationMillis = 1000)
+                )
+            }
+        }
+    }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -88,11 +138,7 @@ fun AnalogClockComponent(
                     }
                 }
 
-                val secondRatio = second / 60f
-                val minuteRatio = minute / 60f
-                val hourRatio = hour / 12f
-
-                rotate(hourRatio * 360, center) {
+                rotate(hourAnimatable.value, center) {
                     drawLine(
                         color = hourHandColor,
                         start = center - Offset(0f, radius * 0.4f),
@@ -102,7 +148,7 @@ fun AnalogClockComponent(
                     )
                 }
 
-                rotate(minuteRatio * 360, center) {
+                rotate(minuteAnimatable.value, center) {
                     drawLine(
                         color = minuteHandColor,
                         start = center - Offset(0f, radius * 0.6f),
@@ -112,7 +158,7 @@ fun AnalogClockComponent(
                     )
                 }
 
-                rotate(secondRatio * 360, center) {
+                rotate(secondAnimatable.value, center) {
                     drawLine(
                         color = secondHandColor,
                         start = center - Offset(0f, radius * 0.7f),

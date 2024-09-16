@@ -41,7 +41,7 @@ fun TimesApp(
 fun TimesBottomBar(
     navigationState: NavigationState
 ) {
-    val items = listOf(CommonDestination.Time, CommonDestination.Timer)
+    val items = listOf(CommonDestination.Timer, CommonDestination.Time)
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     BottomAppBar {

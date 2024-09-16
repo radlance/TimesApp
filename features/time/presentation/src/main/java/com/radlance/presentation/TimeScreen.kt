@@ -50,6 +50,7 @@ fun TimeScreen(
                         DigitalClockComponent(
                             hour = hour.toString(),
                             minute = minute.toString(),
+                            seconds = seconds.toString(),
                             amOrPm = amOrPm,
                             country = country,
                             city = city
@@ -65,15 +66,17 @@ fun TimeScreen(
 fun DigitalClockComponent(
     hour: String,
     minute: String,
+    seconds: String,
     amOrPm: String,
     country: String,
     city: String
 ) {
     val formattedHour = if (hour.length == 1) "0$hour" else hour
     val formattedMinute = if (minute.length == 1) "0$minute" else minute
+    val formattedSeconds = if (seconds.length == 1) "0$seconds" else seconds
 
     Text(
-        text = "$formattedHour:$formattedMinute $amOrPm",
+        text = "$formattedHour:$formattedMinute:$formattedSeconds $amOrPm",
         style = MaterialTheme.typography.titleLarge
     )
     Text(

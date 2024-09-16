@@ -16,7 +16,7 @@ fun CommonNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = CommonDestination.Time,
+        startDestination = CommonDestination.Timer,
         modifier = modifier
     ) {
         composable<CommonDestination.Time> {
