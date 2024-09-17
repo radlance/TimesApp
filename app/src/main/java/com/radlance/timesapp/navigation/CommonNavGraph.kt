@@ -16,14 +16,14 @@ fun CommonNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = CommonDestination.Timer,
+        startDestination = Timer,
         modifier = modifier
     ) {
-        composable<CommonDestination.Time> {
+        composable<Time> {
             TimeScreen(viewModel = timeViewModel)
         }
 
-        composable<CommonDestination.Timer> {
+        composable<Timer> {
 
         }
     }

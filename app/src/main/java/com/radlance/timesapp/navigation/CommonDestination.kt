@@ -11,16 +11,16 @@ import kotlinx.serialization.Serializable
 interface CommonDestination {
     val unselectedIcon: ImageVector
     val selectedIcon: ImageVector
+}
 
-    @Serializable
-    object Time : CommonDestination {
-        override val unselectedIcon: ImageVector = Icons.Outlined.AccessTime
-        override val selectedIcon: ImageVector = Icons.Filled.AccessTimeFilled
-    }
+@Serializable
+object Time : CommonDestination {
+    override val unselectedIcon: ImageVector = Icons.Outlined.AccessTime
+    override val selectedIcon: ImageVector = Icons.Filled.AccessTimeFilled
+}
 
-    @Serializable
-    object Timer : CommonDestination {
-        override val unselectedIcon: ImageVector = Icons.Outlined.Timer
-        override val selectedIcon: ImageVector = Icons.Filled.Timer
-    }
+@Serializable
+object Timer : CommonDestination {
+    override val unselectedIcon: ImageVector = Icons.Outlined.Timer
+    override val selectedIcon: ImageVector = Icons.Filled.Timer
 }
