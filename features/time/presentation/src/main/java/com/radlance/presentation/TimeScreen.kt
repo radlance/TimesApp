@@ -24,6 +24,7 @@ fun TimeScreen(
     modifier: Modifier = Modifier,
     viewModel: TimeViewModel = hiltViewModel()
 ) {
+    viewModel.startUpdatingTime()
     val timeUiState by viewModel.timeUiState.collectAsState()
 
     Box(
@@ -51,9 +52,7 @@ fun TimeScreen(
                             hour = hour.toString(),
                             minute = minute.toString(),
                             seconds = seconds.toString(),
-                            amOrPm = amOrPm,
-                            country = country,
-                            city = city
+                            timeZone = timeZone
                         )
                     }
                 }
@@ -67,21 +66,20 @@ fun DigitalClockComponent(
     hour: String,
     minute: String,
     seconds: String,
-    amOrPm: String,
-    country: String,
-    city: String
+    timeZone: String
 ) {
     val formattedHour = if (hour.length == 1) "0$hour" else hour
     val formattedMinute = if (minute.length == 1) "0$minute" else minute
     val formattedSeconds = if (seconds.length == 1) "0$seconds" else seconds
 
     Text(
-        text = "$formattedHour:$formattedMinute:$formattedSeconds $amOrPm",
-        style = MaterialTheme.typography.titleLarge
+        text = "$formattedHour:$formattedMinute:$formattedSeconds",
+        style = MaterialTheme.typography.displayMedium
     )
+    Spacer(Modifier.height(8.dp))
     Text(
-        text = "$country, $city",
-        style = MaterialTheme.typography.bodyMedium.merge(
+        text = timeZone,
+        style = MaterialTheme.typography.titleLarge.merge(
             TextStyle(
                 color = MaterialTheme.colorScheme.onBackground.copy(
                     alpha = 0.6f

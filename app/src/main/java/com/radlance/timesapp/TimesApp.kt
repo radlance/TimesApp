@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.radlance.presentation.TimeViewModel
 import com.radlance.timesapp.navigation.CommonNavGraph
 import com.radlance.timesapp.navigation.NavigationState
 import com.radlance.timesapp.navigation.Time
@@ -19,9 +18,7 @@ import com.radlance.timesapp.navigation.rememberNavigationState
 import com.radlance.uikit.TimesAppTheme
 
 @Composable
-fun TimesApp(
-    timeViewModel: TimeViewModel
-) {
+fun TimesApp() {
     val navigationState = rememberNavigationState()
 
     TimesAppTheme {
@@ -30,7 +27,6 @@ fun TimesApp(
         ) { innerPadding ->
             CommonNavGraph(
                 navController = navigationState.navHostController,
-                timeViewModel = timeViewModel,
                 modifier = Modifier.padding(innerPadding)
             )
         }

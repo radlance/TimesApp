@@ -58,7 +58,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.datastore.preferences)
     implementation(libs.material.icons.extended)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.navigation.compose)

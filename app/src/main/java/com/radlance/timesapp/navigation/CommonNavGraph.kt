@@ -1,26 +1,28 @@
 package com.radlance.timesapp.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.radlance.presentation.TimeScreen
-import com.radlance.presentation.TimeViewModel
 
 @Composable
 fun CommonNavGraph(
     navController: NavHostController,
-    timeViewModel: TimeViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
         startDestination = Timer,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
         modifier = modifier
     ) {
         composable<Time> {
-            TimeScreen(viewModel = timeViewModel)
+            TimeScreen()
         }
 
         composable<Timer> {
