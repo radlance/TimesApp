@@ -1,9 +1,7 @@
 package com.radlance.presentation
 
-import android.location.Geocoder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,10 +16,7 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
-class TimeViewModel @Inject constructor(
-    private val fusedClient: FusedLocationProviderClient,
-    private val geocoder: Geocoder
-) : ViewModel() {
+class TimeViewModel @Inject constructor() : ViewModel() {
     private val _timeUiState = MutableStateFlow(TimeUiState())
 
     val timeUiState: StateFlow<TimeUiState>
