@@ -40,7 +40,7 @@ fun TimesBottomBar(
     NavigationBar {
         val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
 
-        val items = listOf(Timer, Time)
+        val items = listOf(Time, Timer)
 
         items.forEach { navigationItem ->
             val isSelected = navBackStackEntry?.destination?.hierarchy?.any {

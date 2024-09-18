@@ -1,4 +1,4 @@
-package com.radlance.presentation
+package com.radlance.presentation.components
 
 import android.annotation.SuppressLint
 import android.graphics.BlurMaskFilter

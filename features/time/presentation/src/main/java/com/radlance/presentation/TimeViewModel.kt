@@ -41,7 +41,7 @@ class TimeViewModel @Inject constructor(
         val calendar = Calendar.getInstance(timeZone)
         val currentTime = calendar.time
 
-        val sdf = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+        val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         val formattedTime = sdf.format(currentTime)
 
         val (hour, minute, seconds) = formattedTime.split(" ", ":")
@@ -52,6 +52,8 @@ class TimeViewModel @Inject constructor(
                 minute = minute.toInt(),
                 seconds = seconds.toInt(),
                 timeZone = ZonedDateTime.now().zone.toString()
+                    .replace("_", " ")
+                    .replace("/", ", ")
             )
         }
     }

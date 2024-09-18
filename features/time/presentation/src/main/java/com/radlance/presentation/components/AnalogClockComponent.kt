@@ -1,4 +1,4 @@
-package com.radlance.presentation
+package com.radlance.presentation.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background

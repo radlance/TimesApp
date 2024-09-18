@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.radlance.presentation.components.AnalogClockComponent
 import com.radlance.uikit.TimesAppTheme
 
 @Composable
@@ -79,7 +80,7 @@ fun DigitalClockComponent(
     Spacer(Modifier.height(8.dp))
     Text(
         text = timeZone,
-        style = MaterialTheme.typography.titleLarge.merge(
+        style = MaterialTheme.typography.bodyLarge.merge(
             TextStyle(
                 color = MaterialTheme.colorScheme.onBackground.copy(
                     alpha = 0.6f
