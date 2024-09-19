@@ -23,7 +23,7 @@ object Time : CommonDestination {
 
 @Serializable
 @Keep
-object Timer : CommonDestination {
+object StopWatch : CommonDestination {
     override val unselectedIcon: ImageVector = Icons.Outlined.Timer
     override val selectedIcon: ImageVector = Icons.Filled.Timer
 }

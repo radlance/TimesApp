@@ -72,4 +72,5 @@ dependencies {
 
     implementation(project(":core:uikit"))
     implementation(project(":features:time:presentation"))
+    implementation(project(":features:stopwatch:presentation"))
 }

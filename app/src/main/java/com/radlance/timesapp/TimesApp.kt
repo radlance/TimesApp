@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.radlance.timesapp.navigation.CommonNavGraph
 import com.radlance.timesapp.navigation.NavigationState
 import com.radlance.timesapp.navigation.Time
-import com.radlance.timesapp.navigation.Timer
+import com.radlance.timesapp.navigation.StopWatch
 import com.radlance.timesapp.navigation.rememberNavigationState
 import com.radlance.uikit.TimesAppTheme
 
@@ -40,7 +40,7 @@ fun TimesBottomBar(
     NavigationBar {
         val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
 
-        val items = listOf(Time, Timer)
+        val items = listOf(Time, StopWatch)
 
         items.forEach { navigationItem ->
             val isSelected = navBackStackEntry?.destination?.hierarchy?.any {
