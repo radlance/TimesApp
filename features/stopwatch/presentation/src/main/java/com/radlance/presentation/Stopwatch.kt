@@ -71,7 +71,11 @@ fun Stopwatch(
                     val text = if (isPaused) {
                         stringResource(R.string.pause)
                     } else {
-                        stringResource(R.string.start)
+                        if (isStarted) {
+                            stringResource(R.string.resume)
+                        } else {
+                            stringResource(R.string.start)
+                        }
                     }
                     Text(text = text)
                 }
