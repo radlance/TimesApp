@@ -5,5 +5,6 @@ import androidx.lifecycle.LiveData
 
 interface StopwatchServiceInterface {
     fun getElapsedTime(): LiveData<Long>
-    fun commandService(context: Context, servicestate: SERVICESTATE)
+    fun getEnabledStatus(): LiveData<Boolean>
+    fun commandService(context: Context, serviceState: SERVICESTATE)
 }

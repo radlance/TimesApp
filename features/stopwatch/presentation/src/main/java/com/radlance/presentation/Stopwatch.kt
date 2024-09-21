@@ -1,6 +1,5 @@
 package com.radlance.presentation
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,9 +30,7 @@ fun Stopwatch(
 ) {
     val context = LocalContext.current
 
-    val elapsedTime by viewModel.elapsedTimeState.collectAsState()
-    var isPaused by rememberSaveable { mutableStateOf(false) }
-    var isStarted by rememberSaveable { mutableStateOf(false) }
+    val stopwatchUiState by viewModel.stopwatchState.collectAsState()
 
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
@@ -46,7 +40,7 @@ fun Stopwatch(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = elapsedTime.toString(),
+                text = stopwatchUiState.formatElapsedTime(),
                 style = MaterialTheme.typography.displayLarge,
                 fontSize = 72.sp
             )
@@ -60,42 +54,32 @@ fun Stopwatch(
             Row(modifier = Modifier.padding(32.dp)) {
                 Button(
                     onClick = {
-                        isPaused = !isPaused
-
-                        if (!isPaused) {
-                            viewModel.commandService(context, SERVICESTATE.PAUSE)
-                        } else {
-                            isStarted = true
-                            viewModel.commandService(context, SERVICESTATE.START_OR_RESUME)
-                        }
-
+                        viewModel.commandService(context, SERVICESTATE.START_OR_RESUME)
                     },
+                    enabled = !stopwatchUiState.isEnabled,
                     modifier = Modifier.weight(1f)
                 ) {
-                    val text = if (isPaused) {
-                        stringResource(R.string.pause)
-                    } else {
-                        if (isStarted) {
-                            stringResource(R.string.resume)
-                        } else {
-                            stringResource(R.string.start)
-                        }
-                    }
-                    Text(text = text)
+                    Text(text = stringResource(R.string.start))
+                }
+                Spacer(modifier = Modifier.width(32.dp))
+                Button(
+                    onClick = {
+                        viewModel.commandService(context, SERVICESTATE.PAUSE)
+                    },
+                    enabled = stopwatchUiState.isEnabled,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = stringResource(R.string.pause))
                 }
 
                 Spacer(modifier = Modifier.width(32.dp))
 
                 Button(onClick = {
                     viewModel.commandService(context, SERVICESTATE.RESET)
-                    isStarted = false
-                    isPaused = false
-                }, enabled = isStarted, modifier = Modifier.weight(1f)) {
+                }, enabled = !stopwatchUiState.isEnabled && stopwatchUiState.elapsedTime != 0L, modifier = Modifier.weight(1f)) {
                     Text(text = stringResource(R.string.reset))
                 }
             }
         }
     }
-
-
 }

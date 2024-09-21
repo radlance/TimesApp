@@ -1,29 +1,24 @@
 package com.radlance.presentation
 
-import java.util.Locale
 
 data class StopwatchUiState(
-    val milliSeconds: Long = 0,
-    val seconds: Long = 0,
-    val minutes: Long = 0,
-    val hours: Long = 0
+    val elapsedTime: Long = 0,
+    val isEnabled: Boolean = false
 ) {
-    val formattedTime = if (hours < 1) {
-        String.format(
-            Locale.getDefault(),
-            "%02d:%02d.%02d",
-            minutes,
-            seconds,
-            milliSeconds
-        )
-    } else {
-        String.format(
-            Locale.getDefault(),
-            "%02d:%02d:%02d.%02d",
-            hours,
-            minutes,
-            seconds,
-            milliSeconds
-        )
+    fun formatElapsedTime(): String {
+        if (elapsedTime == 0L) return "00:00:00"
+
+        val hours = elapsedTime / (1000 * 60 * 60)
+        val minutes = (elapsedTime / (1000 * 60)) % 60
+        val seconds = (elapsedTime / 1000) % 60
+        val milliseconds = ((elapsedTime % 1000) / 10).toString().padStart(2, '0')
+
+        return buildString {
+            if (hours > 0) {
+                append(String.format("%02d:%02d:%02d:%s", hours, minutes, seconds, milliseconds))
+            } else {
+                append(String.format("%02d:%02d:%s", minutes, seconds, milliseconds))
+            }
+        }
     }
 }

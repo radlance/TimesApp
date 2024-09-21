@@ -68,12 +68,16 @@ class StopwatchService @Inject constructor() : LifecycleService(),
     }
 
     override fun getElapsedTime(): LiveData<Long> {
-        return _elapsedMilliSeconds
+        return elapsedMilliSeconds
     }
 
-    override fun commandService(context: Context, servicestate: SERVICESTATE) {
+    override fun getEnabledStatus(): LiveData<Boolean> {
+        return isTracking
+    }
+
+    override fun commandService(context: Context, serviceState: SERVICESTATE) {
         val intent = Intent(context,StopwatchService::class.java)
-        intent.action = servicestate.name
+        intent.action = serviceState.name
         context.startService(intent)
     }
 
@@ -87,7 +91,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                 if (_elapsedSeconds.value != seconds) {
                     _elapsedSeconds.postValue(seconds)
                 }
-                delay(100)
+                delay(10)
             }
         }
     }
