@@ -1,5 +1,6 @@
 package com.radlance.presentation
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,16 +21,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun Stopwatch(
     modifier: Modifier = Modifier,
-    viewModel: StopWatchViewModel = viewModel()
+    viewModel: StopwatchViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
     val elapsedTime by viewModel.elapsedTimeState.collectAsState()
     var isPaused by rememberSaveable { mutableStateOf(false) }
     var isStarted by rememberSaveable { mutableStateOf(false) }
@@ -42,7 +46,7 @@ fun Stopwatch(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = elapsedTime.formattedTime,
+                text = elapsedTime.toString(),
                 style = MaterialTheme.typography.displayLarge,
                 fontSize = 72.sp
             )
@@ -59,10 +63,10 @@ fun Stopwatch(
                         isPaused = !isPaused
 
                         if (!isPaused) {
-                            viewModel.pauseStopwatch()
+                            viewModel.commandService(context, SERVICESTATE.PAUSE)
                         } else {
                             isStarted = true
-                            viewModel.startStopwatch()
+                            viewModel.commandService(context, SERVICESTATE.START_OR_RESUME)
                         }
 
                     },
@@ -83,7 +87,7 @@ fun Stopwatch(
                 Spacer(modifier = Modifier.width(32.dp))
 
                 Button(onClick = {
-                    viewModel.resetStopwatch()
+                    viewModel.commandService(context, SERVICESTATE.RESET)
                     isStarted = false
                     isPaused = false
                 }, enabled = isStarted, modifier = Modifier.weight(1f)) {
@@ -92,4 +96,6 @@ fun Stopwatch(
             }
         }
     }
+
+
 }
