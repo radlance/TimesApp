@@ -1,9 +1,6 @@
 package com.radlance.timesapp.di
 
 import android.content.Context
-import com.radlance.presentation.StopwatchServiceInterface
-import com.radlance.timesapp.StopwatchService
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

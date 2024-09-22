@@ -1,4 +1,4 @@
-package com.radlance.timesapp
+package com.radlance.timesapp.services.stopwatch
 
 import java.util.Locale
 import java.util.concurrent.TimeUnit

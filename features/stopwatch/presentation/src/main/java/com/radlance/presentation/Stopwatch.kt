@@ -56,7 +56,7 @@ fun Stopwatch(
             Row(modifier = Modifier.padding(32.dp)) {
                 Button(
                     onClick = {
-                        viewModel.commandService(context, SERVICESTATE.START_OR_RESUME)
+                        viewModel.commandService(context, ServiceState.START_OR_RESUME)
                     },
                     enabled = !stopwatchUiState.isEnabled,
                     modifier = Modifier.weight(1f)
@@ -66,7 +66,7 @@ fun Stopwatch(
                 Spacer(modifier = Modifier.width(32.dp))
                 Button(
                     onClick = {
-                        viewModel.commandService(context, SERVICESTATE.PAUSE)
+                        viewModel.commandService(context, ServiceState.PAUSE)
                     },
                     enabled = stopwatchUiState.isEnabled,
                     modifier = Modifier.weight(1f)
@@ -77,7 +77,7 @@ fun Stopwatch(
                 Spacer(modifier = Modifier.width(32.dp))
 
                 Button(onClick = {
-                    viewModel.commandService(context, SERVICESTATE.RESET)
+                    viewModel.commandService(context, ServiceState.RESET)
                 }, enabled = !stopwatchUiState.isEnabled && stopwatchUiState.elapsedTime != 0L, modifier = Modifier.weight(1f)) {
                     Text(text = stringResource(R.string.reset))
                 }

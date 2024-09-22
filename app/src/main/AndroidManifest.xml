@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".StopwatchService"
+        <service android:name=".services.stopwatch.StopwatchService"
             android:foregroundServiceType="dataSync"
             android:enabled="true"
             android:exported="false"

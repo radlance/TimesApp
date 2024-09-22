@@ -1,4 +1,4 @@
-package com.radlance.timesapp
+package com.radlance.timesapp.services.stopwatch
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,8 +12,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.radlance.presentation.SERVICESTATE
-import com.radlance.presentation.StopwatchServiceInterface
+import com.radlance.presentation.ServiceState
+import com.radlance.presentation.StopwatchServiceAction
+import com.radlance.timesapp.MainActivity
+import com.radlance.timesapp.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
@@ -26,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class StopwatchService @Inject constructor() : LifecycleService(),
-    StopwatchServiceInterface {
+    StopwatchServiceAction {
 
     private lateinit var notificationManager: NotificationManager
     private var elapsedMillisBeforePause = 0L
@@ -39,7 +41,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action?.let { action ->
             when (action) {
-                SERVICESTATE.START_OR_RESUME.name -> {
+                ServiceState.START_OR_RESUME.name -> {
                     startResumeStopWatch()
                     startForeground(
                         NOTIFICATION_ID,
@@ -50,7 +52,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                     )
                 }
 
-                SERVICESTATE.PAUSE.name -> {
+                ServiceState.PAUSE.name -> {
                     _isTracking.value = false
                     elapsedMillisBeforePause = _elapsedMilliSeconds.value
                     notificationManager.notify(
@@ -62,7 +64,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                     )
                 }
 
-                SERVICESTATE.RESET.name -> {
+                ServiceState.RESET.name -> {
                     resetStopWatch()
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
@@ -80,8 +82,8 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         return isTracking
     }
 
-    override fun commandService(context: Context, serviceState: SERVICESTATE) {
-        val intent = Intent(context,StopwatchService::class.java)
+    override fun commandService(context: Context, serviceState: ServiceState) {
+        val intent = Intent(context, StopwatchService::class.java)
         intent.action = serviceState.name
         context.startService(intent)
     }
@@ -166,9 +168,9 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                         StopwatchService::class.java
                     ).also {
                         it.action = if (_isTracking.value) {
-                            SERVICESTATE.PAUSE.name
+                            ServiceState.PAUSE.name
                         } else {
-                            SERVICESTATE.START_OR_RESUME.name
+                            ServiceState.START_OR_RESUME.name
                         }
                     },
                     PendingIntent.FLAG_MUTABLE

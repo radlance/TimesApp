@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StopwatchViewModel @Inject constructor(
-    private val stopwatchService: StopwatchServiceInterface
+    private val stopwatchService: StopwatchServiceAction
 ) : ViewModel() {
 
     val stopwatchState = combine(
@@ -25,7 +25,7 @@ class StopwatchViewModel @Inject constructor(
         initialValue = StopwatchUiState()
     )
 
-    fun commandService(context: Context, serviceState: SERVICESTATE) {
+    fun commandService(context: Context, serviceState: ServiceState) {
         stopwatchService.commandService(context, serviceState)
     }
 }

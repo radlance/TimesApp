@@ -1,5 +1,7 @@
 package com.radlance.presentation
 
+import java.util.Locale
+
 
 data class StopwatchUiState(
     val elapsedTime: Long = 0,
@@ -15,9 +17,26 @@ data class StopwatchUiState(
 
         return buildString {
             if (hours >= 1) {
-                append(String.format("%02d:%02d:%02d:%s", hours, minutes, seconds, milliseconds))
+                append(
+                    String.format(
+                        Locale.getDefault(),
+                        "%02d:%02d:%02d:%s",
+                        hours,
+                        minutes,
+                        seconds,
+                        milliseconds
+                    )
+                )
             } else {
-                append(String.format("%02d:%02d:%s", minutes, seconds, milliseconds))
+                append(
+                    String.format(
+                        Locale.getDefault(),
+                        "%02d:%02d:%s",
+                        minutes,
+                        seconds,
+                        milliseconds
+                    )
+                )
             }
         }
     }
