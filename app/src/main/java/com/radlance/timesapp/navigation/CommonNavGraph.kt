@@ -11,11 +11,12 @@ import com.radlance.presentation.TimeScreen
 @Composable
 fun CommonNavGraph(
     navController: NavHostController,
+    navigateTo: String?,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = Time,
+        startDestination = if (navigateTo == null) Time else StopWatch,
         modifier = modifier
     ) {
         composable<Time> {

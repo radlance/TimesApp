@@ -18,7 +18,7 @@ import com.radlance.timesapp.navigation.rememberNavigationState
 import com.radlance.uikit.TimesAppTheme
 
 @Composable
-fun TimesApp() {
+fun TimesApp(navigateTo: String?) {
     val navigationState = rememberNavigationState()
 
     TimesAppTheme {
@@ -27,6 +27,7 @@ fun TimesApp() {
         ) { innerPadding ->
             CommonNavGraph(
                 navController = navigationState.navHostController,
+                navigateTo = navigateTo,
                 modifier = Modifier.padding(innerPadding)
             )
         }

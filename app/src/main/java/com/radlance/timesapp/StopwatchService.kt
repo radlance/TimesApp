@@ -128,23 +128,31 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         )
         notificationManager.createNotificationChannel(notificationChannel)
 
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("EXTRA_SCREEN", "STOPWATCH")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setOngoing(true)
             .setAutoCancel(false)
             .setSmallIcon(R.drawable.ic_stopwatch)
             .setContentTitle(title)
             .setContentText(text)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    this,
-                    1,
-                    Intent(this, MainActivity::class.java),
-                    PendingIntent.FLAG_MUTABLE
-                )
-            )
+            .setContentIntent(pendingIntent)
             .addAction(
                 R.drawable.ic_stopwatch,
-                if (_isTracking.value!!) getString(R.string.pause) else getString(R.string.resume),
+                if (_isTracking.value!!) {
+                    getString(R.string.pause)
+                } else {
+                    getString(R.string.resume)
+                },
                 PendingIntent.getService(
                     this,
                     2,
@@ -152,13 +160,15 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                         this,
                         StopwatchService::class.java
                     ).also {
-                        it.action =
-                            if (_isTracking.value!!) SERVICESTATE.PAUSE.name else SERVICESTATE.START_OR_RESUME.name
+                        it.action = if (_isTracking.value!!) {
+                            SERVICESTATE.PAUSE.name
+                        } else {
+                            SERVICESTATE.START_OR_RESUME.name
+                        }
                     },
                     PendingIntent.FLAG_MUTABLE
                 )
-            )
-            .build()
+            ).build()
     }
 
     private fun commandService(serviceState: SERVICESTATE) {
