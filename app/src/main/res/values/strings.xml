@@ -4,6 +4,6 @@
     <string name="reset">Reset</string>
     <string name="stop">Stop</string>
     <string name="pause">Pause</string>
-    <string name="stopwatch_running">Stopwatch Running</string>
+    <string name="stopwatch_running">Stopwatch running</string>
     <string name="resume">Resume</string>
 </resources>
