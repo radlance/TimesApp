@@ -7,15 +7,20 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.radlance.presentation.SERVICESTATE
 import com.radlance.presentation.StopwatchServiceInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -47,7 +52,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
 
                 SERVICESTATE.PAUSE.name -> {
                     _isTracking.value = false
-                    elapsedMillisBeforePause = _elapsedMilliSeconds.value!!
+                    elapsedMillisBeforePause = _elapsedMilliSeconds.value
                     notificationManager.notify(
                         NOTIFICATION_ID,
                         getNotification(
@@ -67,11 +72,11 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun getElapsedTime(): LiveData<Long> {
+    override fun getElapsedTime(): Flow<Long> {
         return elapsedMilliSeconds
     }
 
-    override fun getEnabledStatus(): LiveData<Boolean> {
+    override fun getEnabledStatus(): Flow<Boolean> {
         return isTracking
     }
 
@@ -85,11 +90,11 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         _isTracking.value = true
         lifecycleScope.launch(Dispatchers.IO) {
             val startTimeMillis = System.currentTimeMillis()
-            while (_isTracking.value!!) {
-                _elapsedMilliSeconds.postValue((System.currentTimeMillis() - startTimeMillis) + elapsedMillisBeforePause)
-                val seconds = TimeUnit.MILLISECONDS.toSeconds(_elapsedMilliSeconds.value!!)
+            while (_isTracking.value) {
+                _elapsedMilliSeconds.emit((System.currentTimeMillis() - startTimeMillis) + elapsedMillisBeforePause)
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(_elapsedMilliSeconds.value)
                 if (_elapsedSeconds.value != seconds) {
-                    _elapsedSeconds.postValue(seconds)
+                    _elapsedSeconds.emit(seconds)
                 }
                 delay(10)
             }
@@ -108,7 +113,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         _elapsedSeconds.observe(this) { elapsedSeconds ->
-            if (_isTracking.value!!) {
+            if (_isTracking.value) {
                 notificationManager.notify(
                     NOTIFICATION_ID,
                     getNotification(
@@ -148,7 +153,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
             .setContentIntent(pendingIntent)
             .addAction(
                 R.drawable.ic_stopwatch,
-                if (_isTracking.value!!) {
+                if (_isTracking.value) {
                     getString(R.string.pause)
                 } else {
                     getString(R.string.resume)
@@ -160,7 +165,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                         this,
                         StopwatchService::class.java
                     ).also {
-                        it.action = if (_isTracking.value!!) {
+                        it.action = if (_isTracking.value) {
                             SERVICESTATE.PAUSE.name
                         } else {
                             SERVICESTATE.START_OR_RESUME.name
@@ -171,25 +176,32 @@ class StopwatchService @Inject constructor() : LifecycleService(),
             ).build()
     }
 
-    private fun commandService(serviceState: SERVICESTATE) {
-        val intent = Intent(this, StopwatchService::class.java)
-        intent.action = serviceState.name
-        startService(intent)
+    private fun <T> Flow<T>.observe(
+        lifecycleOwner: LifecycleOwner,
+        state: Lifecycle.State = Lifecycle.State.STARTED,
+        observer: (T) -> Unit
+    ) {
+        lifecycleOwner.lifecycleScope.launch {
+            flowWithLifecycle(lifecycleOwner.lifecycle, state).collect { value ->
+                observer(value)
+            }
+        }
     }
+
 
     companion object {
         const val NOTIFICATION_ID = 172
         const val NOTIFICATION_CHANNEL_ID = "473"
         const val NOTIFICATION_CHANNEL_NAME = "stopwatch_channel"
 
-        private val _isTracking = MutableLiveData(false)
-        val isTracking: LiveData<Boolean> = _isTracking
+        private val _isTracking = MutableStateFlow(false)
+        val isTracking: StateFlow<Boolean> = _isTracking.asStateFlow()
 
-        private val _elapsedSeconds = MutableLiveData(0L)
-        val elapsedSeconds: LiveData<Long> = _elapsedSeconds
+        private val _elapsedSeconds = MutableStateFlow(0L)
 
-        private val _elapsedMilliSeconds = MutableLiveData(0L)
-        val elapsedMilliSeconds: LiveData<Long> = _elapsedMilliSeconds
+        private val _elapsedMilliSeconds = MutableStateFlow(0L)
+        val elapsedMilliSeconds: StateFlow<Long> = _elapsedMilliSeconds.asStateFlow()
     }
 }
+
 

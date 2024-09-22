@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val screenToOpen = intent.getStringExtra("EXTRA_SCREEN")
-            Log.d("MainActivity", "screen to open: $screenToOpen")
             TimesApp(screenToOpen)
         }
     }

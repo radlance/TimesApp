@@ -1,5 +1,6 @@
 package com.radlance.presentation
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +43,8 @@ fun Stopwatch(
             Text(
                 text = stopwatchUiState.formatElapsedTime(),
                 style = MaterialTheme.typography.displayLarge,
-                fontSize = 72.sp
+                fontSize = 72.sp,
+                modifier = Modifier.animateContentSize()
             )
         }
 

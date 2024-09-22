@@ -1,10 +1,10 @@
 package com.radlance.presentation
 
 import android.content.Context
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
 interface StopwatchServiceInterface {
-    fun getElapsedTime(): LiveData<Long>
-    fun getEnabledStatus(): LiveData<Boolean>
+    fun getElapsedTime(): Flow<Long>
+    fun getEnabledStatus(): Flow<Boolean>
     fun commandService(context: Context, serviceState: SERVICESTATE)
 }

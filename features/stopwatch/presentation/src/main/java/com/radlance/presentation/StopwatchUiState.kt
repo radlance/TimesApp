@@ -14,7 +14,7 @@ data class StopwatchUiState(
         val milliseconds = ((elapsedTime % 1000) / 10).toString().padStart(2, '0')
 
         return buildString {
-            if (hours > 0) {
+            if (hours >= 1) {
                 append(String.format("%02d:%02d:%02d:%s", hours, minutes, seconds, milliseconds))
             } else {
                 append(String.format("%02d:%02d:%s", minutes, seconds, milliseconds))
