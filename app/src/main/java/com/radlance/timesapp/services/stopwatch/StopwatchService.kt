@@ -146,6 +146,17 @@ class StopwatchService @Inject constructor() : LifecycleService(),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
+        val stopIntent = Intent(this, StopwatchService::class.java).also {
+            it.action = ServiceState.RESET.name
+        }
+
+        val pendingStopIntent = PendingIntent.getService(
+            this,
+            3,
+            stopIntent,
+            PendingIntent.FLAG_MUTABLE
+        )
+
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setOngoing(true)
             .setAutoCancel(false)
@@ -175,7 +186,13 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                     },
                     PendingIntent.FLAG_MUTABLE
                 )
-            ).build()
+            )
+            .addAction(
+                R.drawable.ic_stopwatch,
+                getString(R.string.stop),
+                pendingStopIntent
+            )
+            .build()
     }
 
     private fun <T> Flow<T>.observe(
