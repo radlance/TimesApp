@@ -1,4 +1,4 @@
-package com.radlance.timesapp.services.stopwatch
+package com.radlance.timesapp.services
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,8 +12,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.radlance.presentation.ServiceState
-import com.radlance.presentation.StopwatchServiceAction
+import com.radlance.time.core.ServiceState
+import com.radlance.time.core.TimeServiceAction
 import com.radlance.timesapp.MainActivity
 import com.radlance.timesapp.R
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class StopwatchService @Inject constructor() : LifecycleService(),
-    StopwatchServiceAction {
+    TimeServiceAction {
 
     private lateinit var notificationManager: NotificationManager
     private var elapsedMillisBeforePause = 0L
@@ -74,7 +74,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun getElapsedTime(): Flow<Long> {
+    override fun getCurrentTime(): Flow<Long> {
         return elapsedMilliSeconds
     }
 

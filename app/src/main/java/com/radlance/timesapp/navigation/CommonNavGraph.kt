@@ -5,8 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.radlance.presentation.CountdownTimer
 import com.radlance.presentation.Stopwatch
 import com.radlance.presentation.TimeScreen
+
 
 @Composable
 fun CommonNavGraph(
@@ -16,7 +18,17 @@ fun CommonNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (navigateTo == null) Time else StopWatch,
+        startDestination = when (navigateTo) {
+            null -> {
+                Time
+            }
+            "STOPWATCH" -> {
+                StopWatch
+            }
+            else -> {
+                Timer
+            }
+        },
         modifier = modifier
     ) {
         composable<Time> {
@@ -25,6 +37,10 @@ fun CommonNavGraph(
 
         composable<StopWatch> {
             Stopwatch()
+        }
+
+        composable<Timer> {
+            CountdownTimer()
         }
     }
 }

@@ -1,10 +1,10 @@
-package com.radlance.presentation
+package com.radlance.time.core
 
 import android.content.Context
 import kotlinx.coroutines.flow.Flow
 
-interface StopwatchServiceAction {
-    fun getElapsedTime(): Flow<Long>
+interface TimeServiceAction {
+    fun getCurrentTime(): Flow<Long>
     fun getEnabledStatus(): Flow<Boolean>
     fun commandService(context: Context, serviceState: ServiceState)
 }

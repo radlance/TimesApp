@@ -26,13 +26,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.radlance.time.core.ServiceState
 
 @Composable
-fun Stopwatch(
+fun CountdownTimer(
     modifier: Modifier = Modifier,
-    viewModel: StopwatchViewModel = hiltViewModel()
+    viewModel: CountdownTimerViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
-    val stopwatchUiState by viewModel.stopwatchState.collectAsState()
+    val countdownTimerUiState by viewModel.countdownTimerState.collectAsState()
 
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
@@ -42,7 +42,7 @@ fun Stopwatch(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stopwatchUiState.formatElapsedTime(),
+                text = countdownTimerUiState.remainingTime.toString(),
                 style = MaterialTheme.typography.displayLarge,
                 fontSize = 72.sp,
                 modifier = Modifier.animateContentSize()
@@ -57,9 +57,10 @@ fun Stopwatch(
             Row(modifier = Modifier.padding(32.dp)) {
                 Button(
                     onClick = {
+                        viewModel.setCountDownTimer(6000L)
                         viewModel.commandService(context, ServiceState.START_OR_RESUME)
                     },
-                    enabled = !stopwatchUiState.isEnabled,
+                    enabled = !countdownTimerUiState.isEnabled,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(text = stringResource(R.string.start))
@@ -69,7 +70,7 @@ fun Stopwatch(
                     onClick = {
                         viewModel.commandService(context, ServiceState.PAUSE)
                     },
-                    enabled = stopwatchUiState.isEnabled,
+                    enabled = countdownTimerUiState.isEnabled,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(text = stringResource(R.string.pause))
@@ -77,9 +78,13 @@ fun Stopwatch(
 
                 Spacer(modifier = Modifier.width(32.dp))
 
-                Button(onClick = {
-                    viewModel.commandService(context, ServiceState.RESET)
-                }, enabled = !stopwatchUiState.isEnabled && stopwatchUiState.elapsedTime != 0L, modifier = Modifier.weight(1f)) {
+                Button(
+                    onClick = {
+                        viewModel.commandService(context, ServiceState.RESET)
+                    },
+                    enabled = !countdownTimerUiState.isEnabled && countdownTimerUiState.remainingTime != 0L,
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(text = stringResource(R.string.reset))
                 }
             }

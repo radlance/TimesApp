@@ -1,0 +1,36 @@
+package com.radlance.presentation
+
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.radlance.time.core.ServiceState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+
+@HiltViewModel
+class CountdownTimerViewModel @Inject constructor(
+    private val countdownTimerService: TimerAdditionalAction
+) : ViewModel() {
+
+    val countdownTimerState = combine(
+        countdownTimerService.getCurrentTime(),
+        countdownTimerService.getEnabledStatus()
+    ) { remainingTime, isEnabled ->
+        CountdownTimerUiState(remainingTime = remainingTime, isEnabled = isEnabled)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = CountdownTimerUiState()
+    )
+
+    fun commandService(context: Context, serviceState: ServiceState) {
+        countdownTimerService.commandService(context, serviceState)
+    }
+
+    fun setCountDownTimer(time: Long) {
+        countdownTimerService.setCountDownTime(time)
+    }
+}
