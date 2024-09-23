@@ -42,7 +42,7 @@ fun CountdownTimer(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = countdownTimerUiState.remainingTime.toString(),
+                text = countdownTimerUiState.formatRamainingTime(),
                 style = MaterialTheme.typography.displayLarge,
                 fontSize = 72.sp,
                 modifier = Modifier.animateContentSize()
@@ -57,7 +57,7 @@ fun CountdownTimer(
             Row(modifier = Modifier.padding(32.dp)) {
                 Button(
                     onClick = {
-                        viewModel.setCountDownTimer(6000L)
+                        viewModel.setCountDownTimer(30000L)
                         viewModel.commandService(context, ServiceState.START_OR_RESUME)
                     },
                     enabled = !countdownTimerUiState.isEnabled,
