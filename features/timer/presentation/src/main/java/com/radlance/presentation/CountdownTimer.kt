@@ -1,15 +1,18 @@
 package com.radlance.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -21,8 +24,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -81,39 +84,29 @@ fun CountdownTimer(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Row(modifier = Modifier.padding(start = 32.dp, end = 32.dp, bottom = 32.dp)) {
-                    Button(
-                        onClick = {
-                            viewModel.setCountDownTimer(30000L)
-                            viewModel.commandService(context, ServiceState.START_OR_RESUME)
-                        },
-                        enabled = !countdownTimerUiState.isEnabled,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(text = stringResource(R.string.start))
-                    }
+                Row(modifier = Modifier.padding()) {
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = 30.dp)
+                            .clip(CircleShape)
+                            .size(75.dp)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable(onClick = {
+                                viewModel.commandService(
+                                    context,
+                                    ServiceState.RESET
+                                )
+                            })
 
-                    Spacer(modifier = Modifier.width(32.dp))
-                    Button(
-                        onClick = {
-                            viewModel.commandService(context, ServiceState.PAUSE)
-                        },
-                        enabled = countdownTimerUiState.isEnabled,
-                        modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = stringResource(R.string.pause))
-                    }
-
-                    Spacer(modifier = Modifier.width(32.dp))
-
-                    Button(
-                        onClick = {
-                            viewModel.commandService(context, ServiceState.RESET)
-                        },
-                        enabled = !countdownTimerUiState.isEnabled && countdownTimerUiState.remainingTime != 0L,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(text = stringResource(R.string.reset))
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .size(45.dp)
+                                .align(Alignment.Center)
+                        )
                     }
                 }
             }
