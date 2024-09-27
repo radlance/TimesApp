@@ -159,6 +159,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
 
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setOngoing(true)
+            .setOnlyAlertOnce(true)
             .setAutoCancel(false)
             .setSmallIcon(R.drawable.ic_stopwatch)
             .setContentTitle(title)

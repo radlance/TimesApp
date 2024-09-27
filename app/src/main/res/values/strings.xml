@@ -7,4 +7,6 @@
     <string name="stopwatch_running">Stopwatch running</string>
     <string name="countdown_running">Timer running</string>
     <string name="resume">Resume</string>
+    <string name="time_over">Time over</string>
+    <string name="timer_has_finished">Timer has finished.</string>
 </resources>

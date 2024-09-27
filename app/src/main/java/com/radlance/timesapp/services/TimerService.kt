@@ -105,11 +105,25 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                 delay(10)
             }
             if (_remainingMilliSeconds.value <= 0) {
-                resetCountdownTimer()
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                stopSelf()
+                showFinishNotification()
             }
         }
+    }
+    private fun showFinishNotification() {
+        val notificationChannel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        notificationManager.createNotificationChannel(notificationChannel)
+
+        val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_timer)
+            .setContentTitle(getString(R.string.time_over))
+            .setContentText(getString(R.string.timer_has_finished))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+        notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun resetCountdownTimer() {
@@ -169,6 +183,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setOngoing(true)
             .setAutoCancel(false)
+            .setOnlyAlertOnce(true)
             .setSmallIcon(R.drawable.ic_timer)
             .setContentTitle(title)
             .setContentText(text)
