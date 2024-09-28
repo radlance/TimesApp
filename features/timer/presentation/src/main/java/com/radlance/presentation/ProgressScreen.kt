@@ -45,7 +45,7 @@ fun ProgressScreen(
     onResumeClick: () -> Unit,
     onPauseClick: () -> Unit,
     onStopClick: () -> Unit,
-    progressColor: Color = MaterialTheme.colorScheme.secondary,
+    progressColor: Color = MaterialTheme.colorScheme.primary,
     backgroundColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
 ) {
 
