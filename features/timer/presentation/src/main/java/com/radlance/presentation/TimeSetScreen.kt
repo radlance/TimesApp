@@ -82,7 +82,11 @@ fun TimeSetScreen(
                             .clip(CircleShape)
                             .size(75.dp)
                             .background(MaterialTheme.colorScheme.primary)
-                            .clickable { onStartTimer() }
+                            .clickable {
+                                if (hours != 0 || minutes != 0 || seconds != 0) {
+                                    onStartTimer()
+                                }
+                            }
 
                     ) {
                         Icon(
@@ -131,6 +135,6 @@ private fun SingleNumberSlider(
 }
 
 @Composable
-fun Colon() {
+private fun Colon() {
     Text(text = "• •", fontSize = 48.sp, fontWeight = FontWeight.ExtraLight)
 }

@@ -17,9 +17,14 @@ class CountdownTimerViewModel @Inject constructor(
 
     val countdownTimerState = combine(
         countdownTimerService.getCurrentTime(),
-        countdownTimerService.getEnabledStatus()
-    ) { remainingTime, isEnabled ->
-        CountdownTimerUiState(remainingTime = remainingTime, isEnabled = isEnabled)
+        countdownTimerService.getEnabledStatus(),
+        countdownTimerService.getInitialTime()
+    ) { remainingTime, isEnabled, initialTime ->
+        CountdownTimerUiState(
+            remainingTime = remainingTime,
+            initialTime = initialTime,
+            isEnabled = isEnabled
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

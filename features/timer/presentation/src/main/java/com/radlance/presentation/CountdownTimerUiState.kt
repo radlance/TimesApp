@@ -4,9 +4,14 @@ import java.util.Locale
 
 data class CountdownTimerUiState(
     val remainingTime: Long = 0L,
+    val initialTime: Long = 0L,
     val isEnabled: Boolean = false
 ) {
-    fun formatRamainingTime(): String {
+    fun getPercentProgress(): Float {
+        return remainingTime.toFloat() / initialTime.toFloat()
+    }
+
+    fun formatRemainingTime(): String {
         if (remainingTime == 0L) return "00:00:00"
 
         val hours = remainingTime / (1000 * 60 * 60)

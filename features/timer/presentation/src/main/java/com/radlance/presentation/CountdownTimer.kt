@@ -21,20 +21,28 @@ fun CountdownTimer(
     var minutesState by rememberSaveable { mutableIntStateOf(0) }
     var secondsState by rememberSaveable { mutableIntStateOf(0) }
 
-    TimeSetScreen(
-        hours = hoursState,
-        minutes = minutesState,
-        seconds = secondsState,
-        onHoursChanged = { hoursState = it },
-        onMinutesChanged = { minutesState = it },
-        onSecondsChanged = { secondsState = it },
-        onStartTimer = {
-            val totalMilliseconds = (hoursState * 60 * 60 * 1000) + (minutesState * 60 * 1000) + (secondsState * 1000)
+    if (!countdownTimerUiState.isEnabled) {
+        TimeSetScreen(
+            hours = hoursState,
+            minutes = minutesState,
+            seconds = secondsState,
+            onHoursChanged = { hoursState = it },
+            onMinutesChanged = { minutesState = it },
+            onSecondsChanged = { secondsState = it },
+            onStartTimer = {
+                val totalMilliseconds =
+                    (hoursState * 60 * 60 * 1000) + (minutesState * 60 * 1000) + (secondsState * 1000)
 
-            viewModel.setCountDownTimer(totalMilliseconds.toLong())
-            viewModel.commandService(context, ServiceState.START_OR_RESUME)
-        }
-    )
+                viewModel.setCountDownTimer(totalMilliseconds.toLong())
+                viewModel.commandService(context, ServiceState.START_OR_RESUME)
+            }
+        )
+    } else {
+        ProgressScreen(
+            progress = countdownTimerUiState.getPercentProgress(),
+            remainingTime = countdownTimerUiState.formatRemainingTime()
+        )
+    }
 }
 
 

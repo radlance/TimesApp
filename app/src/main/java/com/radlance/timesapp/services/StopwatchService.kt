@@ -7,10 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.radlance.time.core.ServiceState
 import com.radlance.time.core.TimeServiceAction
@@ -39,6 +36,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         intent?.action?.let { action ->
             when (action) {
                 ServiceState.START_OR_RESUME.name -> {
@@ -47,7 +45,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                         NOTIFICATION_ID,
                         getNotification(
                             getString(R.string.stopwatch_running),
-                            formatMillisToTimer(elapsedMillisBeforePause)
+                            formatMillis(elapsedMillisBeforePause)
                         )
                     )
                 }
@@ -59,7 +57,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                         NOTIFICATION_ID,
                         getNotification(
                             getString(R.string.stopwatch_running),
-                            formatMillisToTimer(elapsedMillisBeforePause)
+                            formatMillis(elapsedMillisBeforePause)
                         )
                     )
                 }
@@ -71,7 +69,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                 }
             }
         }
-        return super.onStartCommand(intent, flags, startId)
+        return START_REDELIVER_INTENT
     }
 
     override fun getCurrentTime(): Flow<Long> {
@@ -120,7 +118,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                     NOTIFICATION_ID,
                     getNotification(
                         getString(R.string.stopwatch_running),
-                        formatMillisToTimer(TimeUnit.SECONDS.toMillis(elapsedSeconds))
+                        formatMillis(TimeUnit.SECONDS.toMillis(elapsedSeconds))
                     )
                 )
             }
@@ -195,19 +193,6 @@ class StopwatchService @Inject constructor() : LifecycleService(),
             )
             .build()
     }
-
-    private fun <T> Flow<T>.observe(
-        lifecycleOwner: LifecycleOwner,
-        state: Lifecycle.State = Lifecycle.State.STARTED,
-        observer: (T) -> Unit
-    ) {
-        lifecycleOwner.lifecycleScope.launch {
-            flowWithLifecycle(lifecycleOwner.lifecycle, state).collect { value ->
-                observer(value)
-            }
-        }
-    }
-
 
     companion object {
         const val NOTIFICATION_ID = 172

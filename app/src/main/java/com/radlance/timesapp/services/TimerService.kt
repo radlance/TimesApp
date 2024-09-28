@@ -7,10 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.radlance.presentation.TimerAdditionalAction
 import com.radlance.time.core.ServiceState
@@ -31,7 +28,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
     TimerAdditionalAction {
 
     private lateinit var notificationManager: NotificationManager
-    private var initialMilliSeconds = 10000L
+    private var initialMilliSeconds = 0L
 
     override fun onCreate() {
         super.onCreate()
@@ -47,7 +44,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                         NOTIFICATION_ID,
                         getNotification(
                             getString(R.string.countdown_running),
-                            formatMillisToTimer(initialMilliSeconds)
+                            formatMillis(initialMilliSeconds)
                         )
                     )
                 }
@@ -58,7 +55,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                         NOTIFICATION_ID,
                         getNotification(
                             getString(R.string.pause),
-                            formatMillisToTimer(_remainingMilliSeconds.value)
+                            formatMillis(_remainingMilliSeconds.value)
                         )
                     )
                 }
@@ -75,6 +72,11 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
 
     override fun setCountDownTime(time: Long) {
         _remainingMilliSeconds.value = time
+        _initialTime.value = time
+    }
+
+    override fun getInitialTime(): Flow<Long> {
+        return initialTime
     }
 
     override fun getCurrentTime(): Flow<Long> {
@@ -122,15 +124,17 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
             .setContentTitle(getString(R.string.time_over))
             .setContentText(getString(R.string.timer_has_finished))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
 
+        _isTracking.value = false
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun resetCountdownTimer() {
         _isTracking.value = false
-        _remainingMilliSeconds.value = 10000L
-        _remainingSeconds.value = 10000L
-        initialMilliSeconds = 10000L
+        _remainingMilliSeconds.value = 0
+        _remainingSeconds.value = 0
+        initialMilliSeconds = 0
         lifecycleScope.coroutineContext.cancelChildren()
     }
 
@@ -143,7 +147,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                     NOTIFICATION_ID,
                     getNotification(
                         getString(R.string.countdown_running),
-                        formatMillisToTimer(TimeUnit.SECONDS.toMillis(remainingSeconds))
+                        formatMillis(TimeUnit.SECONDS.toMillis(remainingSeconds))
                     )
                 )
             }
@@ -219,18 +223,6 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
             .build()
     }
 
-    private fun <T> Flow<T>.observe(
-        lifecycleOwner: LifecycleOwner,
-        state: Lifecycle.State = Lifecycle.State.STARTED,
-        observer: (T) -> Unit
-    ) {
-        lifecycleOwner.lifecycleScope.launch {
-            flowWithLifecycle(lifecycleOwner.lifecycle, state).collect { value ->
-                observer(value)
-            }
-        }
-    }
-
     companion object {
         const val NOTIFICATION_ID = 173
         const val NOTIFICATION_CHANNEL_ID = "474"
@@ -239,9 +231,12 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
         private val _isTracking = MutableStateFlow(false)
         val isTracking: StateFlow<Boolean> = _isTracking.asStateFlow()
 
-        private val _remainingSeconds = MutableStateFlow(10000L)
+        private val _remainingSeconds = MutableStateFlow(0L)
 
-        private val _remainingMilliSeconds = MutableStateFlow(10000L)
+        private val _remainingMilliSeconds = MutableStateFlow(0L)
         val remainingMilliSeconds: StateFlow<Long> = _remainingMilliSeconds.asStateFlow()
+
+        private val _initialTime = MutableStateFlow(0L)
+        val initialTime: StateFlow<Long> = _initialTime
     }
 }
