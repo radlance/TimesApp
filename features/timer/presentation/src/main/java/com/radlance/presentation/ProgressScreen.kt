@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,12 +34,17 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ProgressScreen(
     modifier: Modifier = Modifier,
     progress: Float,
     remainingTime: String,
+    isEnabled: Boolean,
+    onResumeClick: () -> Unit,
+    onPauseClick: () -> Unit,
+    onStopClick: () -> Unit,
     progressColor: Color = MaterialTheme.colorScheme.secondary,
     backgroundColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
 ) {
@@ -58,7 +64,6 @@ fun ProgressScreen(
 
 
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -91,7 +96,7 @@ fun ProgressScreen(
                         )
                     }
                     Box(modifier = Modifier.align(Alignment.Center)) {
-                        Text(text = remainingTime, style = MaterialTheme.typography.displayLarge)
+                        Text(text = remainingTime, style = MaterialTheme.typography.displayLarge, fontSize = 72.sp)
                     }
                 }
             }
@@ -105,8 +110,20 @@ fun ProgressScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    CustomButton(icon = Icons.Filled.Pause, onclick = { })
-                    CustomButton(icon = Icons.Filled.Stop, onclick = { })
+                    val icon = if(isEnabled) {
+                        Icons.Filled.Pause
+                    } else {
+                        Icons.Filled.PlayArrow
+                    }
+
+                    val onClick = if(isEnabled) {
+                        { onPauseClick() }
+                    } else {
+                        { onResumeClick() }
+                    }
+
+                    CustomButton(icon = icon, onclick = onClick)
+                    CustomButton(icon = Icons.Filled.Stop, onclick = onStopClick)
                 }
             }
         }

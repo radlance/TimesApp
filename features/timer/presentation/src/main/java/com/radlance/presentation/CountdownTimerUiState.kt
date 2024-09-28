@@ -3,8 +3,8 @@ package com.radlance.presentation
 import java.util.Locale
 
 data class CountdownTimerUiState(
-    val remainingTime: Long = 0L,
-    val initialTime: Long = 0L,
+    val remainingTime: Long = -1L,
+    val initialTime: Long = -1L,
     val isEnabled: Boolean = false
 ) {
     fun getPercentProgress(): Float {

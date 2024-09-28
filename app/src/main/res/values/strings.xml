@@ -4,8 +4,10 @@
     <string name="reset">Reset</string>
     <string name="stop">Stop</string>
     <string name="pause">Pause</string>
+    <string name="stopwatch_paused">Stopwatch paused</string>
     <string name="stopwatch_running">Stopwatch running</string>
     <string name="countdown_running">Timer running</string>
+    <string name="countdown_paused">Timer paused</string>
     <string name="resume">Resume</string>
     <string name="time_over">Time over</string>
     <string name="timer_has_finished">Timer has finished.</string>

@@ -21,7 +21,7 @@ fun CountdownTimer(
     var minutesState by rememberSaveable { mutableIntStateOf(0) }
     var secondsState by rememberSaveable { mutableIntStateOf(0) }
 
-    if (!countdownTimerUiState.isEnabled) {
+    if (countdownTimerUiState.remainingTime <= 0L) {
         TimeSetScreen(
             hours = hoursState,
             minutes = minutesState,
@@ -40,7 +40,11 @@ fun CountdownTimer(
     } else {
         ProgressScreen(
             progress = countdownTimerUiState.getPercentProgress(),
-            remainingTime = countdownTimerUiState.formatRemainingTime()
+            remainingTime = countdownTimerUiState.formatRemainingTime(),
+            onResumeClick = { viewModel.commandService(context, ServiceState.START_OR_RESUME) },
+            onPauseClick = { viewModel.commandService(context, ServiceState.PAUSE) },
+            isEnabled = countdownTimerUiState.isEnabled,
+            onStopClick = { viewModel.commandService(context, ServiceState.RESET) }
         )
     }
 }

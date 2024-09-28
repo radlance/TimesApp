@@ -56,7 +56,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                     notificationManager.notify(
                         NOTIFICATION_ID,
                         getNotification(
-                            getString(R.string.stopwatch_running),
+                            getString(R.string.stopwatch_paused),
                             formatMillis(elapsedMillisBeforePause)
                         )
                     )

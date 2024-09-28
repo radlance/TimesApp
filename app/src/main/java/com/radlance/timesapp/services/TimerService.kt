@@ -54,7 +54,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                     notificationManager.notify(
                         NOTIFICATION_ID,
                         getNotification(
-                            getString(R.string.pause),
+                            getString(R.string.countdown_paused),
                             formatMillis(_remainingMilliSeconds.value)
                         )
                     )
