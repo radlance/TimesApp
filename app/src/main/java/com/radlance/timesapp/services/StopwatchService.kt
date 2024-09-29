@@ -128,7 +128,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
         val notificationChannel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationManager.createNotificationChannel(notificationChannel)
 
@@ -194,9 +194,9 @@ class StopwatchService @Inject constructor() : LifecycleService(),
     }
 
     companion object {
-        const val NOTIFICATION_ID = 172
-        const val NOTIFICATION_CHANNEL_ID = "473"
-        const val NOTIFICATION_CHANNEL_NAME = "stopwatch_channel"
+        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_CHANNEL_ID = "0"
+        const val NOTIFICATION_CHANNEL_NAME = "stopwatch channel"
 
         private val _isTracking = MutableStateFlow(false)
         val isTracking: StateFlow<Boolean> = _isTracking.asStateFlow()

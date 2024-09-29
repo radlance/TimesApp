@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
@@ -107,25 +108,37 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                 delay(10)
             }
             if (_remainingMilliSeconds.value <= 0) {
+                resetCountdownTimer()
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                notificationManager.cancel(NOTIFICATION_ID)
+                stopSelf()
+
                 showFinishNotification()
             }
         }
     }
     private fun showFinishNotification() {
         val notificationChannel = NotificationChannel(
-            NOTIFICATION_CHANNEL_ID,
-            NOTIFICATION_CHANNEL_NAME,
+            FINISH_NOTIFICATION_CHANNEL_ID,
+            FINISH_NOTIFICATION_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            setSound(
+                Uri.parse(
+                    "android.resource://" + packageName + "/" + R.raw.timer
+                ), null
+            )
+        }
+
         notificationManager.createNotificationChannel(notificationChannel)
 
-        val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, FINISH_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_timer)
             .setContentTitle(getString(R.string.time_over))
             .setContentText(getString(R.string.timer_has_finished))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setOngoing(true)
 
-        _isTracking.value = false
+        notificationManager.createNotificationChannel(notificationChannel)
         notificationManager.notify(NOTIFICATION_ID, builder.build())
     }
 
@@ -157,8 +170,9 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
         val notificationChannel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_DEFAULT
         )
+
         notificationManager.createNotificationChannel(notificationChannel)
 
         val intent = Intent(this, MainActivity::class.java).apply {
@@ -223,9 +237,11 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
     }
 
     companion object {
-        const val NOTIFICATION_ID = 173
-        const val NOTIFICATION_CHANNEL_ID = "474"
-        const val NOTIFICATION_CHANNEL_NAME = "countdown_timer_channel"
+        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_CHANNEL_ID = "1"
+        const val FINISH_NOTIFICATION_CHANNEL_ID = "2"
+        const val NOTIFICATION_CHANNEL_NAME = "timer channel"
+        const val FINISH_NOTIFICATION_CHANNEL_NAME = "timer finish channel"
 
         private val _isTracking = MutableStateFlow(false)
         val isTracking: StateFlow<Boolean> = _isTracking.asStateFlow()
