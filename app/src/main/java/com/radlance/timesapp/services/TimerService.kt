@@ -138,7 +138,6 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
             .setContentTitle(getString(R.string.time_over))
             .setContentIntent(getTimerPendingIntent())
             .setContentText(getString(R.string.timer_has_finished))
-            .setOngoing(true)
 
         notificationManager.createNotificationChannel(notificationChannel)
         notificationManager.notify(NOTIFICATION_ID, builder.build())
