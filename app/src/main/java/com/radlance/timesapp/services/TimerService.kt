@@ -117,6 +117,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
             }
         }
     }
+
     private fun showFinishNotification() {
         val notificationChannel = NotificationChannel(
             FINISH_NOTIFICATION_CHANNEL_ID,
@@ -135,6 +136,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
         val builder = NotificationCompat.Builder(this, FINISH_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_timer)
             .setContentTitle(getString(R.string.time_over))
+            .setContentIntent(getTimerPendingIntent())
             .setContentText(getString(R.string.timer_has_finished))
             .setOngoing(true)
 
@@ -166,6 +168,21 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
         }
     }
 
+    private fun getTimerPendingIntent(): PendingIntent? {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("EXTRA_SCREEN", "COUNTDOWN_TIMER")
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        return PendingIntent.getActivity(
+            this,
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+    }
+
     private fun getNotification(title: String, text: String): Notification {
         val notificationChannel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
@@ -175,16 +192,6 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
 
         notificationManager.createNotificationChannel(notificationChannel)
 
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra("EXTRA_SCREEN", "COUNTDOWN_TIMER")
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-        )
 
         val stopIntent = Intent(this, CountdownTimerService::class.java).also {
             it.action = ServiceState.RESET.name
@@ -204,7 +211,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
             .setSmallIcon(R.drawable.ic_timer)
             .setContentTitle(title)
             .setContentText(text)
-            .setContentIntent(pendingIntent)
+            .setContentIntent(getTimerPendingIntent())
             .addAction(
                 R.drawable.ic_timer,
                 if (_isTracking.value) {

@@ -134,6 +134,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
 
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("EXTRA_SCREEN", "STOPWATCH")
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
         val pendingIntent = PendingIntent.getActivity(
