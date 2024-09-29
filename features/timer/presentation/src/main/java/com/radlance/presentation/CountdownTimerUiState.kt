@@ -24,7 +24,7 @@ data class CountdownTimerUiState(
                 append(
                     String.format(
                         Locale.getDefault(),
-                        "%02d:%02d:%02d:%s",
+                        "%02d:%02d:%02d",
                         hours,
                         minutes,
                         seconds,

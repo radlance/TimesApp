@@ -1,5 +1,6 @@
 package com.radlance.presentation
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -96,7 +97,12 @@ fun ProgressScreen(
                         )
                     }
                     Box(modifier = Modifier.align(Alignment.Center)) {
-                        Text(text = remainingTime, style = MaterialTheme.typography.displayLarge, fontSize = 72.sp)
+                        Text(
+                            text = remainingTime,
+                            style = MaterialTheme.typography.displayLarge,
+                            fontSize = 72.sp,
+                            modifier = Modifier.animateContentSize()
+                        )
                     }
                 }
             }

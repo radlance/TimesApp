@@ -36,7 +36,6 @@ class StopwatchService @Inject constructor() : LifecycleService(),
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
         intent?.action?.let { action ->
             when (action) {
                 ServiceState.START_OR_RESUME.name -> {
@@ -69,7 +68,7 @@ class StopwatchService @Inject constructor() : LifecycleService(),
                 }
             }
         }
-        return START_REDELIVER_INTENT
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun getCurrentTime(): Flow<Long> {
