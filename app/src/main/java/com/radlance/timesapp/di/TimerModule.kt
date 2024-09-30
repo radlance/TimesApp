@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface ProvideActionService {
+interface TimerModule {
     @Binds
     fun provideStopwatchService(stopwatchService: StopwatchService): TimeServiceAction
 

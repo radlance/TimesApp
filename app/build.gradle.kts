@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.hilt.android)
-    implementation(project(":features:foreground-time-core"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.lifecycle.service)
     implementation(libs.play.services.location)
@@ -73,7 +72,9 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":core:uikit"))
+    implementation(project(":features:foreground-time-core"))
     implementation(project(":features:time:presentation"))
     implementation(project(":features:stopwatch:presentation"))
     implementation(project(":features:timer:presentation"))
+    implementation(project(":features:alarm:presentation"))
 }
