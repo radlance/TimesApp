@@ -1,8 +1,9 @@
 package com.radlance.presentation
 
-import java.util.Calendar
+import android.icu.util.Calendar
+import java.time.LocalDateTime
 
 data class AlarmItem(
-    val calendar: Calendar,
+    val time: Calendar,
     val message: String
 )

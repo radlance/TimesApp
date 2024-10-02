@@ -4,11 +4,17 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import com.radlance.presentation.AlarmItem
 import com.radlance.presentation.AlarmScheduler
+import java.time.ZoneId
 import javax.inject.Inject
 
-class AndroidAlarmScheduler @Inject constructor(private val context: Context) : AlarmScheduler {
+class AndroidAlarmScheduler @Inject constructor(
+    private val context: Context
+): AlarmScheduler {
+
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(alarmItem: AlarmItem) {
@@ -16,10 +22,10 @@ class AndroidAlarmScheduler @Inject constructor(private val context: Context) : 
             putExtra("EXTRA_MESSAGE", alarmItem.message)
         }
 
-        alarmManager.setRepeating(
+        Toast.makeText(context, alarmItem.time.time.toString(), Toast.LENGTH_SHORT).show()
+        alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
-            alarmItem.calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
+            alarmItem.time.timeInMillis,
             PendingIntent.getBroadcast(
                 context,
                 alarmItem.hashCode(),
