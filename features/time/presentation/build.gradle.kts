@@ -61,3 +61,8 @@ dependencies {
 
     implementation(project(":core:uikit"))
 }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

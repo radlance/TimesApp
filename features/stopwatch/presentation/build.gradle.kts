@@ -43,6 +43,10 @@ android {
     }
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
@@ -58,4 +62,10 @@ dependencies {
 
     implementation(project(":core:uikit"))
     implementation(project(":features:foreground-time-core"))
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
