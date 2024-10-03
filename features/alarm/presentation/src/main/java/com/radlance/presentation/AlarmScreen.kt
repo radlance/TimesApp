@@ -18,11 +18,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.radlance.presentation.components.AlarmItemComponent
+import com.radlance.presentation.components.AlarmSetupComponent
 
 @Composable
 fun AlarmScreen(
@@ -32,6 +39,9 @@ fun AlarmScreen(
 
     val alarmState by viewModel.alarmState.collectAsState()
 
+    var showSetupDialog by remember { mutableStateOf(false) }
+    var selectedAlarmItem by remember { mutableStateOf<AlarmItem?>(null) }
+
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
@@ -40,9 +50,22 @@ fun AlarmScreen(
             items(items = alarmState, key = { alarmItem -> alarmItem.id }) { alarmItem ->
                 AlarmItemComponent(
                     alarmItem = alarmItem,
+                    onItemItemClicked = {
+                        selectedAlarmItem = alarmItem
+                        showSetupDialog = true
+                    },
                     onCheckedChange = { viewModel.switchAlarmState(alarmItem, it) },
                     checked = alarmItem.isEnabled
                 )
+            }
+        }
+
+        if (showSetupDialog && selectedAlarmItem != null) {
+            Dialog(
+                onDismissRequest = { showSetupDialog = false },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
+                AlarmSetupComponent(alarmItem = selectedAlarmItem!!)
             }
         }
 

@@ -38,7 +38,6 @@ android {
 
 dependencies {
     implementation(libs.hilt.android)
-    implementation(project(":features:foreground-time-core"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -50,4 +49,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":core:uikit"))
+    implementation(project(":features:foreground-time-core"))
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
