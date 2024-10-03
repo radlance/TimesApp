@@ -1,6 +1,5 @@
 package com.radlance.presentation.components
 
-import android.icu.util.Calendar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.radlance.presentation.AlarmItem
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 @Composable
@@ -29,7 +30,12 @@ fun AlarmItemComponent(
     checked: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier.height(120.dp).clickable { onItemItemClicked() }) {
+    Card(
+        modifier = modifier
+            .height(120.dp)
+            .clickable { onItemItemClicked() },
+        shape = RoundedCornerShape(16.dp)
+    ) {
         Row(
             modifier = Modifier
                 .padding(16.dp)

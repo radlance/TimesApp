@@ -1,6 +1,5 @@
 package com.radlance.presentation.components
 
-import android.icu.util.Calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.radlance.presentation.AlarmItem
 import java.time.DayOfWeek
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +34,10 @@ fun AlarmSetupComponent(
     alarmItem: AlarmItem,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = Modifier.padding(16.dp)) {
+    Card(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+        shape = RoundedCornerShape(24.dp)
+    ) {
         Box(modifier = Modifier.padding(32.dp), contentAlignment = Alignment.Center) {
             rememberDatePickerState()
             val timePickerState = rememberTimePickerState()
