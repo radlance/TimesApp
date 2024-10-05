@@ -1,5 +1,6 @@
 package com.radlance.presentation.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -73,23 +74,24 @@ fun WeekDaySelector(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-
         items(items = daysOfWeek) { day ->
             val isSelected = selectedDays.contains(day)
             val textColor = if (isSelected) Color.White else Color.Black
-            val backgroundColor =
-                if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+            val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
+            val animatedTextColor = animateColorAsState(targetValue = textColor, label = "")
+            val animatedBackgroundColor = animateColorAsState(targetValue = backgroundColor, label = "")
+            
             val interactionSource = remember { MutableInteractionSource() }
             Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .background(backgroundColor, shape = RoundedCornerShape(8.dp))
+                    .background(animatedBackgroundColor.value, shape = RoundedCornerShape(8.dp))
                     .clickable(indication = null, interactionSource = interactionSource) {
                         onDaySelected(day)
                     }
                     .padding(8.dp)
             ) {
-                Text(text = day.toString().take(3), color = textColor, fontSize = 16.sp)
+                Text(text = day.toString().take(3), color = animatedTextColor.value, fontSize = 16.sp)
             }
         }
     }
