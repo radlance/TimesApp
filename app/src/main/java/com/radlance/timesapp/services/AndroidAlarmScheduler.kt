@@ -4,11 +4,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
-import com.radlance.presentation.AlarmItem
+import com.radlance.domain.AlarmItem
 import com.radlance.presentation.AlarmScheduler
-import java.time.ZoneId
 import javax.inject.Inject
 
 class AndroidAlarmScheduler @Inject constructor(

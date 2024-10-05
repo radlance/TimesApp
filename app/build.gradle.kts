@@ -76,5 +76,6 @@ dependencies {
     implementation(project(":features:time:presentation"))
     implementation(project(":features:stopwatch:presentation"))
     implementation(project(":features:timer:presentation"))
+    implementation(project(":features:alarm:domain"))
     implementation(project(":features:alarm:presentation"))
 }

@@ -2,6 +2,7 @@ package com.radlance.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,16 +16,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.radlance.presentation.AlarmItem
+import com.radlance.domain.AlarmItem
 import java.time.DayOfWeek
 import java.util.Calendar
 
@@ -32,18 +33,21 @@ import java.util.Calendar
 @Composable
 fun AlarmSetupComponent(
     alarmItem: AlarmItem,
+    onDaySelected: (DayOfWeek) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+        modifier = modifier.padding(start = 16.dp, end = 16.dp),
         shape = RoundedCornerShape(24.dp)
     ) {
         Box(modifier = Modifier.padding(32.dp), contentAlignment = Alignment.Center) {
-            rememberDatePickerState()
-            val timePickerState = rememberTimePickerState()
+            val timePickerState = rememberTimePickerState(
+                initialHour = alarmItem.time.get(Calendar.HOUR_OF_DAY),
+                initialMinute = alarmItem.time.get(Calendar.MINUTE)
+            )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 TimePicker(timePickerState)
-                WeekDaySelector(selectedDays = listOf(DayOfWeek.MONDAY), onDaySelected = { })
+                WeekDaySelector(selectedDays = alarmItem.daysOfWeek, onDaySelected = onDaySelected)
             }
         }
     }
@@ -75,12 +79,14 @@ fun WeekDaySelector(
             val textColor = if (isSelected) Color.White else Color.Black
             val backgroundColor =
                 if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
-
+            val interactionSource = remember { MutableInteractionSource() }
             Box(
                 modifier = Modifier
                     .padding(8.dp)
                     .background(backgroundColor, shape = RoundedCornerShape(8.dp))
-                    .clickable { onDaySelected(day) }
+                    .clickable(indication = null, interactionSource = interactionSource) {
+                        onDaySelected(day)
+                    }
                     .padding(8.dp)
             ) {
                 Text(text = day.toString().take(3), color = textColor, fontSize = 16.sp)
@@ -98,7 +104,9 @@ fun AlarmSetupComponentPreview(modifier: Modifier = Modifier) {
             id = 1,
             time = Calendar.getInstance(),
             message = 1.toString(),
+            daysOfWeek = listOf(DayOfWeek.MONDAY),
             isEnabled = false
-        )
+        ),
+        onDaySelected = {}
     )
 }

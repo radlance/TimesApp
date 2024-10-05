@@ -40,18 +40,17 @@ fun AlarmScreen(
     val alarmState by viewModel.alarmState.collectAsState()
 
     var showSetupDialog by remember { mutableStateOf(false) }
-    var selectedAlarmItem by remember { mutableStateOf<AlarmItem?>(null) }
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(items = alarmState, key = { alarmItem -> alarmItem.id }) { alarmItem ->
+            items(items = alarmState.alarmItems, key = { alarmItem -> alarmItem.id }) { alarmItem ->
                 AlarmItemComponent(
                     alarmItem = alarmItem,
                     onItemItemClicked = {
-                        selectedAlarmItem = alarmItem
+                        viewModel.selectAlarmItem(alarmItem)
                         showSetupDialog = true
                     },
                     onCheckedChange = { viewModel.switchAlarmState(alarmItem, it) },
@@ -60,12 +59,15 @@ fun AlarmScreen(
             }
         }
 
-        if (showSetupDialog && selectedAlarmItem != null) {
+        if (showSetupDialog && alarmState.selectedItem != null) {
             Dialog(
                 onDismissRequest = { showSetupDialog = false },
                 properties = DialogProperties(usePlatformDefaultWidth = false)
             ) {
-                AlarmSetupComponent(alarmItem = selectedAlarmItem!!)
+                AlarmSetupComponent(
+                    alarmItem = alarmState.selectedItem!!,
+                    onDaySelected = viewModel::changeDaysOfWeek
+                )
             }
         }
 
