@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AlarmModule {
+interface AlarmModule {
     @Binds
-    abstract fun provideScheduler(alarmScheduler: AndroidAlarmScheduler): AlarmScheduler
+    fun provideScheduler(alarmScheduler: AndroidAlarmScheduler): AlarmScheduler
 }

@@ -80,9 +80,7 @@ fun AlarmScreen(
                 .clip(CircleShape)
                 .size(75.dp)
                 .background(MaterialTheme.colorScheme.primary)
-                .clickable {
-
-                }
+                .clickable { viewModel.addAlarmItem() }
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,

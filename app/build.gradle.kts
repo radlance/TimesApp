@@ -72,10 +72,12 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":core:uikit"))
+    implementation(project(":core:database"))
     implementation(project(":features:foreground-time-core"))
     implementation(project(":features:time:presentation"))
     implementation(project(":features:stopwatch:presentation"))
     implementation(project(":features:timer:presentation"))
+    implementation(project(":features:alarm:data"))
     implementation(project(":features:alarm:domain"))
     implementation(project(":features:alarm:presentation"))
 }

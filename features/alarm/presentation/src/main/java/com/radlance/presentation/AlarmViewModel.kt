@@ -1,31 +1,65 @@
 package com.radlance.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.radlance.domain.AlarmItem
+import com.radlance.domain.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.LocalDate
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val alarmRepository: AlarmRepository
 ) : ViewModel() {
+
+    val alarmItems = alarmRepository.getAlarmItems().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
+
     private val _alarmState = MutableStateFlow(AlarmUiState())
 
-    val alarmState: StateFlow<AlarmUiState>
-        get() = _alarmState.asStateFlow()
+    val alarmState: StateFlow<AlarmUiState> = combine(
+        alarmItems,
+        _alarmState
+    ) { items, state ->
+        state.copy(alarmItems = items)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = AlarmUiState()
+    )
 
     fun switchAlarmState(alarmItem: AlarmItem, enabled: Boolean) {
-        _alarmState.update { currentState ->
-            val updatedItems = currentState.alarmItems.map {
-                if (it.id == alarmItem.id) it.copy(isEnabled = enabled) else it
-            }
+        viewModelScope.launch {
+            alarmRepository.updateAlarmItem(alarmItem.copy(isEnabled = enabled))
+        }
+    }
 
-            currentState.copy(alarmItems = updatedItems)
+    fun addAlarmItem() {
+        viewModelScope.launch {
+            for (alarmItem in List(3) {
+                AlarmItem(
+                    time = Calendar.getInstance(),
+                    message = it.toString(),
+                    daysOfWeek = listOf(LocalDate.now().dayOfWeek),
+                    isEnabled = false
+                )
+            }) {
+                alarmRepository.addAlarmItem(alarmItem)
+            }
         }
     }
 
@@ -48,12 +82,8 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun updateAlarm(alarmItem: AlarmItem) {
-        _alarmState.update { currentState ->
-            currentState.copy(
-                alarmItems = currentState.alarmItems.map {
-                    if (it.id == alarmItem.id) alarmItem else it
-                }
-            )
+        viewModelScope.launch {
+            alarmRepository.updateAlarmItem(alarmItem)
         }
     }
 
