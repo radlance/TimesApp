@@ -16,9 +16,8 @@ class AndroidAlarmScheduler @Inject constructor(
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(alarmItem: AlarmItem) {
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
-            putExtra("EXTRA_MESSAGE", alarmItem.message)
-        }
+        val intent = Intent(context, AlarmReceiver::class.java)
+
         Toast.makeText(context, alarmItem.time.time.toString(), Toast.LENGTH_SHORT).show()
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,

@@ -17,6 +17,9 @@ interface TimesDao {
     suspend fun updateAlarmItem(alarmItemEntity: AlarmItemEntity)
 
     @Insert
+    suspend fun addAlarmItems(alarmItemEntities: List<AlarmItemEntity>)
+
+    @Insert
     suspend fun addAlarmItem(alarmItemEntity: AlarmItemEntity)
 
     @Delete

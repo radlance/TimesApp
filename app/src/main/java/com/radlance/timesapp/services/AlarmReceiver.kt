@@ -12,12 +12,10 @@ import com.radlance.timesapp.R
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: return
-        println("Alarm triggered: $message")
-        showNotification(context, message)
+        showNotification(context)
     }
 
-    private fun showNotification(context: Context?, message: String) {
+    private fun showNotification(context: Context?) {
         val notificationManager =
             context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -37,7 +35,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_alarm)
             .setContentTitle("Alarm triggered")
-            .setContentText(message)
+            .setContentText("Wake up!")
 
 
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build())

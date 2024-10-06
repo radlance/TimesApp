@@ -29,6 +29,12 @@ class AlarmViewModel @Inject constructor(
 
     private val _alarmState = MutableStateFlow(AlarmUiState())
 
+    fun initializeAlarmItems() {
+        viewModelScope.launch {
+            alarmRepository.addAlarmItems(emptyList())
+        }
+    }
+
     val alarmState: StateFlow<AlarmUiState> = combine(
         alarmItems,
         _alarmState
@@ -66,6 +72,7 @@ class AlarmViewModel @Inject constructor(
             currentState.copy(
                 selectedItem = currentState.selectedItem?.copy(daysOfWeek = currentDaysOfWeek)
             )
+
         }
     }
 
