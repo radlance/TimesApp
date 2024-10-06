@@ -19,7 +19,6 @@ class AndroidAlarmScheduler @Inject constructor(
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("EXTRA_MESSAGE", alarmItem.message)
         }
-
         Toast.makeText(context, alarmItem.time.time.toString(), Toast.LENGTH_SHORT).show()
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,

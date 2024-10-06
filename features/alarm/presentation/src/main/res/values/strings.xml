@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save">@android:string/ok</string>
+    <string name="cancel">@android:string/cancel</string>
+</resources>

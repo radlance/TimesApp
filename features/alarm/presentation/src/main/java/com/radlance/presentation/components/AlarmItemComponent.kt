@@ -50,7 +50,7 @@ fun AlarmItemComponent(
 
                 Text(text = formattedTime, fontSize = 32.sp)
                 Spacer(Modifier.height(16.dp))
-                Text(text = "Sun, Sat")
+                Text(text = alarmItem.daysOfWeek.joinToString { it.toString().take(3) })
             }
 
             Switch(checked = checked, onCheckedChange = onCheckedChange)

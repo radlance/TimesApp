@@ -66,7 +66,9 @@ fun AlarmScreen(
             ) {
                 AlarmSetupComponent(
                     alarmItem = alarmState.selectedItem!!,
-                    onDaySelected = viewModel::changeDaysOfWeek
+                    onDaySelected = viewModel::changeDaysOfWeek,
+                    onCancelClicked = { showSetupDialog = false },
+                    onOkClicked = { viewModel.updateAlarm(alarmItem = it) }
                 )
             }
         }
@@ -92,65 +94,4 @@ fun AlarmScreen(
             )
         }
     }
-//    var alarmItem: AlarmItem? = null
-//
-//    var secondsText by remember {
-//        mutableStateOf("")
-//    }
-//    var message by remember {
-//        mutableStateOf("")
-//    }
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp),
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        val pickerState = rememberTimePickerState(
-//            initialHour = LocalTime.now().hour,
-//            initialMinute = LocalTime.now().minute
-//        )
-//
-//        TimePicker(pickerState)
-//
-//        OutlinedTextField(
-//            value = message,
-//            onValueChange = { message = it },
-//            modifier = Modifier.fillMaxWidth(),
-//            placeholder = {
-//                Text(text = "Message")
-//            }
-//        )
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            Button(onClick = {
-//                val pickedTime = Calendar.getInstance().apply {
-//                    set(Calendar.YEAR, get(Calendar.YEAR))
-//                    set(Calendar.MONTH, get(Calendar.MONTH))
-//                    set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH))
-//                    set(Calendar.HOUR_OF_DAY, pickerState.hour)
-//                    set(Calendar.MINUTE, pickerState.minute)
-//                    set(Calendar.SECOND, 0)
-//                    set(Calendar.MILLISECOND, 0)
-//                }
-//
-//                alarmItem = AlarmItem(
-//                    time = pickedTime,
-//                    message = message
-//                )
-//                alarmItem?.let(viewModel::schedule)
-//                secondsText = ""
-//                message = ""
-//            }) {
-//                Text(text = "Schedule")
-//            }
-//            Button(onClick = {
-//                alarmItem?.let(viewModel::cancel)
-//            }) {
-//                Text(text = "Cancel")
-//            }
-//        }
-//    }
 }

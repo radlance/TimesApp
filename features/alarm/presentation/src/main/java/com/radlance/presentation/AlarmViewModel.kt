@@ -45,7 +45,16 @@ class AlarmViewModel @Inject constructor(
             )
 
         }
+    }
 
+    fun updateAlarm(alarmItem: AlarmItem) {
+        _alarmState.update { currentState ->
+            currentState.copy(
+                alarmItems = currentState.alarmItems.map {
+                    if (it.id == alarmItem.id) alarmItem else it
+                }
+            )
+        }
     }
 
     fun selectAlarmItem(alarmItem: AlarmItem) {
