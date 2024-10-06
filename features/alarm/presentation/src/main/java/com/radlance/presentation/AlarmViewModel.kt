@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import java.time.LocalDate
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +21,7 @@ class AlarmViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) : ViewModel() {
 
-    val alarmItems = alarmRepository.getAlarmItems().stateIn(
+    private val alarmItems = alarmRepository.getAlarmItems().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()
@@ -48,18 +46,9 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
-    fun addAlarmItem() {
+    fun addAlarmItem(alarmItem: AlarmItem) {
         viewModelScope.launch {
-            for (alarmItem in List(3) {
-                AlarmItem(
-                    time = Calendar.getInstance(),
-                    message = it.toString(),
-                    daysOfWeek = listOf(LocalDate.now().dayOfWeek),
-                    isEnabled = false
-                )
-            }) {
-                alarmRepository.addAlarmItem(alarmItem)
-            }
+            alarmRepository.addAlarmItem(alarmItem)
         }
     }
 
@@ -77,7 +66,6 @@ class AlarmViewModel @Inject constructor(
             currentState.copy(
                 selectedItem = currentState.selectedItem?.copy(daysOfWeek = currentDaysOfWeek)
             )
-
         }
     }
 

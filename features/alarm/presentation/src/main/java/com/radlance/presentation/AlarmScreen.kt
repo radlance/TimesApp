@@ -36,17 +36,19 @@ fun AlarmScreen(
     modifier: Modifier = Modifier,
     viewModel: AlarmViewModel = hiltViewModel()
 ) {
-
     val alarmState by viewModel.alarmState.collectAsState()
 
     var showSetupDialog by remember { mutableStateOf(false) }
+    var isNewItem by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(items = alarmState.alarmItems, key = { alarmItem -> alarmItem.id }) { alarmItem ->
+            items(
+                items = alarmState.alarmItems,
+                key = { alarmItem -> alarmItem.id }) { alarmItem ->
                 AlarmItemComponent(
                     alarmItem = alarmItem,
                     onItemItemClicked = {
@@ -59,17 +61,32 @@ fun AlarmScreen(
             }
         }
 
-        if (showSetupDialog && alarmState.selectedItem != null) {
+
+        if (showSetupDialog) {
             Dialog(
                 onDismissRequest = { showSetupDialog = false },
                 properties = DialogProperties(usePlatformDefaultWidth = false)
             ) {
-                AlarmSetupComponent(
-                    alarmItem = alarmState.selectedItem!!,
-                    onDaySelected = viewModel::changeDaysOfWeek,
-                    onCancelClicked = { showSetupDialog = false },
-                    onOkClicked = { viewModel.updateAlarm(alarmItem = it) }
-                )
+                if (isNewItem) {
+                    AlarmSetupComponent(
+                        alarmItem = null,
+                        onDaySelected = null,
+                        onCancelClicked = {
+                            showSetupDialog = false
+                            isNewItem = false
+                        },
+                        onOkClicked = { viewModel.addAlarmItem(alarmItem = it) }
+                    )
+                } else {
+                    AlarmSetupComponent(
+                        alarmItem = alarmState.selectedItem,
+                        onDaySelected = viewModel::changeDaysOfWeek,
+                        onCancelClicked = { showSetupDialog = false },
+                        onOkClicked = {
+                            viewModel.updateAlarm(alarmItem = it)
+                        }
+                    )
+                }
             }
         }
 
@@ -80,7 +97,10 @@ fun AlarmScreen(
                 .clip(CircleShape)
                 .size(75.dp)
                 .background(MaterialTheme.colorScheme.primary)
-                .clickable { viewModel.addAlarmItem() }
+                .clickable {
+                    showSetupDialog = true
+                    isNewItem = true
+                }
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,

@@ -23,6 +23,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,20 +35,23 @@ import androidx.compose.ui.unit.sp
 import com.radlance.domain.AlarmItem
 import com.radlance.presentation.R
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmSetupComponent(
-    alarmItem: AlarmItem,
-    onDaySelected: (DayOfWeek) -> Unit,
+    alarmItem: AlarmItem?,
+    onDaySelected: ((DayOfWeek) -> Unit)?,
     onCancelClicked: () -> Unit,
     onOkClicked: (AlarmItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val selectedDaysOfWeek = remember { mutableStateListOf(LocalDate.now().dayOfWeek) }
+
     val timePickerState = rememberTimePickerState(
-        initialHour = alarmItem.time.get(Calendar.HOUR_OF_DAY),
-        initialMinute = alarmItem.time.get(Calendar.MINUTE)
+        initialHour = alarmItem?.time?.get(Calendar.HOUR_OF_DAY) ?: 12,
+        initialMinute = alarmItem?.time?.get(Calendar.MINUTE) ?: 0
     )
 
     Card(
@@ -63,8 +67,14 @@ fun AlarmSetupComponent(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     TimePicker(timePickerState)
                     WeekDaySelector(
-                        selectedDays = alarmItem.daysOfWeek,
-                        onDaySelected = onDaySelected
+                        selectedDays = alarmItem?.daysOfWeek ?: selectedDaysOfWeek,
+                        onDaySelected = {
+                            if (onDaySelected != null) {
+                                onDaySelected(it)
+                            } else {
+                                selectedDaysOfWeek.add(it)
+                            }
+                        }
                     )
                 }
             }
@@ -80,13 +90,26 @@ fun AlarmSetupComponent(
                         set(Calendar.YEAR, get(Calendar.YEAR))
                         set(Calendar.MONTH, get(Calendar.MONTH))
                         set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH))
-                        set(Calendar.DAY_OF_WEEK, get(alarmItem.daysOfWeek.first().value))
+                        set(
+                            Calendar.DAY_OF_WEEK,
+                            get(
+                                alarmItem?.daysOfWeek?.first()?.value
+                                    ?: selectedDaysOfWeek.first().value
+                            )
+                        )
                         set(Calendar.HOUR_OF_DAY, timePickerState.hour)
                         set(Calendar.MINUTE, timePickerState.minute)
                         set(Calendar.SECOND, 0)
                         set(Calendar.MILLISECOND, 0)
                     }
-                    onOkClicked(alarmItem.copy(time = pickedTime))
+                    val newAlarmItem = AlarmItem(
+                        time = pickedTime,
+                        daysOfWeek = selectedDaysOfWeek,
+                        message = "",
+                        isEnabled = true
+                    )
+
+                    onOkClicked(alarmItem?.copy(time = pickedTime) ?: newAlarmItem)
                     onCancelClicked()
                 }
             ) {
