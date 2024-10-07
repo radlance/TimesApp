@@ -37,7 +37,6 @@ fun AlarmScreen(
     viewModel: AlarmViewModel = hiltViewModel()
 ) {
     val alarmState by viewModel.alarmState.collectAsState()
-    viewModel.initializeAlarmItems()
 
     var showSetupDialog by remember { mutableStateOf(false) }
     var isNewItem by remember { mutableStateOf(false) }
