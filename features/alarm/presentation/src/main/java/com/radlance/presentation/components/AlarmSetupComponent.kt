@@ -71,6 +71,8 @@ fun AlarmSetupComponent(
                         onDaySelected = {
                             if (onDaySelected != null) {
                                 onDaySelected(it)
+                            } else if (selectedDaysOfWeek.contains(it)) {
+                                selectedDaysOfWeek.remove(it)
                             } else {
                                 selectedDaysOfWeek.add(it)
                             }
@@ -85,6 +87,7 @@ fun AlarmSetupComponent(
                 Text(text = stringResource(R.string.cancel), fontSize = 18.sp)
             }
             TextButton(
+                enabled = alarmItem?.daysOfWeek?.isNotEmpty() ?: selectedDaysOfWeek.isNotEmpty(),
                 onClick = {
                     val pickedTime = Calendar.getInstance().apply {
                         set(Calendar.YEAR, get(Calendar.YEAR))
@@ -127,13 +130,13 @@ fun WeekDaySelector(
     onDaySelected: (DayOfWeek) -> Unit
 ) {
     val daysOfWeek = listOf(
-        DayOfWeek.SUNDAY,
         DayOfWeek.MONDAY,
         DayOfWeek.TUESDAY,
         DayOfWeek.WEDNESDAY,
         DayOfWeek.THURSDAY,
         DayOfWeek.FRIDAY,
-        DayOfWeek.SATURDAY
+        DayOfWeek.SATURDAY,
+        DayOfWeek.SUNDAY
     )
 
     LazyRow(

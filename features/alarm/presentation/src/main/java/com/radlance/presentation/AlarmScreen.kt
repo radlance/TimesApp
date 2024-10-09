@@ -46,8 +46,12 @@ fun AlarmScreen(
             contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val sortedItems =
+                alarmState.alarmItems.map {
+                    it.copy(daysOfWeek = it.daysOfWeek.sortedBy { dayOfWeek -> dayOfWeek.value })
+                }
             items(
-                items = alarmState.alarmItems,
+                items = sortedItems,
                 key = { alarmItem -> alarmItem.id }) { alarmItem ->
                 AlarmItemComponent(
                     alarmItem = alarmItem,
