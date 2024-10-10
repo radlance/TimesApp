@@ -52,6 +52,12 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
+    fun removeAlarmItem(alarmItem: AlarmItem) {
+        viewModelScope.launch {
+            alarmRepository.deleteAlarmItem(alarmItem)
+        }
+    }
+
     fun changeDaysOfWeek(dayOfWeek: DayOfWeek) {
         _alarmState.update { currentState ->
             val currentDaysOfWeek =

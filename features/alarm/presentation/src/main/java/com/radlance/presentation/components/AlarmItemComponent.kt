@@ -30,7 +30,7 @@ import java.util.Locale
 @Composable
 fun AlarmItemComponent(
     alarmItem: AlarmItem,
-    onItemItemClicked: () -> Unit,
+    onItemClicked: () -> Unit,
     onCheckedChange: (Boolean) -> Unit,
     checked: Boolean,
     modifier: Modifier = Modifier
@@ -38,7 +38,7 @@ fun AlarmItemComponent(
     Card(
         modifier = modifier
             .height(120.dp)
-            .clickable { onItemItemClicked() },
+            .clickable { onItemClicked() },
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
@@ -89,7 +89,7 @@ private fun AlarmItemComponentPreview() {
             daysOfWeek = listOf(DayOfWeek.MONDAY),
             isEnabled = true
         ),
-        onItemItemClicked = {},
+        onItemClicked = {},
         onCheckedChange = {},
         checked = true
     )
