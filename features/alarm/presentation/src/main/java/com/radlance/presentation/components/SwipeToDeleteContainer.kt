@@ -27,7 +27,7 @@ fun SwipeToDeleteContainer(
     var isRemoved by remember { mutableStateOf(false) }
     val state = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
-            if (value == SwipeToDismissBoxValue.EndToStart) {
+            if (value == SwipeToDismissBoxValue.EndToStart || value == SwipeToDismissBoxValue.StartToEnd) {
                 isRemoved = true
                 true
             } else {
@@ -53,8 +53,7 @@ fun SwipeToDeleteContainer(
         SwipeToDismissBox(
             state = state,
             backgroundContent = {},
-            content = { content(item) },
-            enableDismissFromStartToEnd = false
+            content = { content(item) }
         )
     }
 }
