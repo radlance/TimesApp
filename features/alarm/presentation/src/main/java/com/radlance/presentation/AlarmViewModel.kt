@@ -24,7 +24,7 @@ class AlarmViewModel @Inject constructor(
     private val alarmItems = alarmRepository.getAlarmItems().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = emptyList()
+        initialValue = null
     )
 
     private val _alarmState = MutableStateFlow(AlarmUiState())
