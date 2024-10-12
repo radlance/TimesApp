@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SwipeToDeleteContainer(
     item: AlarmItem,
+    isLastElement: Boolean,
     onDelete: (AlarmItem) -> Unit,
     animationDuration: Int = 500,
     content: @Composable (AlarmItem) -> Unit
@@ -36,8 +37,10 @@ fun SwipeToDeleteContainer(
         }
     )
 
-    LaunchedEffect(key1 = isRemoved) {
-        if (isRemoved) {
+    LaunchedEffect(key1 = isRemoved, key2 = isLastElement) {
+        if (isRemoved && isLastElement) {
+            onDelete(item)
+        } else if (isRemoved) {
             delay(animationDuration.toLong())
             onDelete(item)
         }

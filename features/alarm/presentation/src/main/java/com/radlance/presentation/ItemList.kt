@@ -27,6 +27,7 @@ fun AlarmList(
         ) { alarmItem ->
             SwipeToDeleteContainer(
                 item = alarmItem,
+                isLastElement = alarmItems.size == 1,
                 onDelete = onDelete
             ) { item ->
                 AlarmItemComponent(
