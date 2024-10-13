@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +44,11 @@ class AlarmViewModel @Inject constructor(
     fun switchAlarmState(alarmItem: AlarmItem, enabled: Boolean) {
         viewModelScope.launch {
             alarmRepository.updateAlarmItem(alarmItem.copy(isEnabled = enabled))
+            if (enabled) {
+                schedule(alarmItem)
+            } else {
+                alarmScheduler.cancel(alarmItem)
+            }
         }
     }
 
@@ -89,10 +95,14 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun schedule(alarmItem: AlarmItem) {
-        alarmScheduler.schedule(alarmItem)
-    }
+        alarmItem.daysOfWeek.forEach { dayOfWeek ->
 
-    fun cancel(alarmItem: AlarmItem) {
-        alarmScheduler.cancel(alarmItem)
+            val updatedTime = alarmItem.time.apply {
+                set(Calendar.DAY_OF_WEEK, dayOfWeek.value + 1)
+            }
+
+            val updatedItem = alarmItem.copy(time = updatedTime)
+            alarmScheduler.schedule(updatedItem)
+        }
     }
 }

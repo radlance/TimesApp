@@ -61,7 +61,9 @@ fun AlarmScreen(
                         viewModel.selectAlarmItem(it)
                         showSetupDialog = true
                     },
-                    onCheckedChange = viewModel::switchAlarmState,
+                    onCheckedChange = { item, checked ->
+                        viewModel.switchAlarmState(item, checked)
+                    },
                     onDelete = viewModel::removeAlarmItem
                 )
             }
@@ -88,7 +90,10 @@ fun AlarmScreen(
                             showSetupDialog = false
                             isNewItem = false
                         },
-                        onOkClicked = { viewModel.addAlarmItem(alarmItem = it) }
+                        onOkClicked = { alarmItem ->
+                            viewModel.addAlarmItem(alarmItem = alarmItem)
+                            viewModel.schedule(alarmItem)
+                        }
                     )
                 } else {
                     AlarmSetupComponent(

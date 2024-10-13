@@ -93,13 +93,6 @@ fun AlarmSetupComponent(
                         set(Calendar.YEAR, get(Calendar.YEAR))
                         set(Calendar.MONTH, get(Calendar.MONTH))
                         set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH))
-                        set(
-                            Calendar.DAY_OF_WEEK,
-                            get(
-                                alarmItem?.daysOfWeek?.first()?.value
-                                    ?: selectedDaysOfWeek.first().value
-                            )
-                        )
                         set(Calendar.HOUR_OF_DAY, timePickerState.hour)
                         set(Calendar.MINUTE, timePickerState.minute)
                         set(Calendar.SECOND, 0)
