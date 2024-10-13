@@ -18,13 +18,13 @@ class AndroidAlarmScheduler @Inject constructor(
     override fun schedule(alarmItem: AlarmItem) {
         val intent = Intent(context, AlarmReceiver::class.java)
 
-        Toast.makeText(context, alarmItem.time.time.toString(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "scheduled: ${alarmItem.time.time}", Toast.LENGTH_SHORT).show()
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
             alarmItem.time.timeInMillis,
             PendingIntent.getBroadcast(
                 context,
-                alarmItem.hashCode(),
+                alarmItem.id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
@@ -32,10 +32,11 @@ class AndroidAlarmScheduler @Inject constructor(
     }
 
     override fun cancel(alarmItem: AlarmItem) {
+        Toast.makeText(context, "canceled: ${alarmItem.time.time}", Toast.LENGTH_SHORT).show()
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                alarmItem.hashCode(),
+                alarmItem.id,
                 Intent(context, AlarmReceiver::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
