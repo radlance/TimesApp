@@ -7,6 +7,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.radlance.domain.AlarmItem
 import com.radlance.presentation.AlarmScheduler
+import java.util.Calendar
 import javax.inject.Inject
 
 class AndroidAlarmScheduler @Inject constructor(
@@ -18,28 +19,41 @@ class AndroidAlarmScheduler @Inject constructor(
     override fun schedule(alarmItem: AlarmItem) {
         val intent = Intent(context, AlarmReceiver::class.java)
 
-        Toast.makeText(context, "scheduled: ${alarmItem.time.time}", Toast.LENGTH_SHORT).show()
-        alarmManager.setExact(
-            AlarmManager.RTC_WAKEUP,
-            alarmItem.time.timeInMillis,
-            PendingIntent.getBroadcast(
-                context,
-                alarmItem.id,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        alarmItem.daysOfWeek.forEach { dayOfWeek ->
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = alarmItem.time.timeInMillis
+                set(Calendar.DAY_OF_WEEK, dayOfWeek.value + 1)
+                if (timeInMillis < System.currentTimeMillis()) {
+                    add(Calendar.WEEK_OF_YEAR, 1)
+                }
+            }
+            Toast.makeText(context, "scheduled: ${calendar.time}", Toast.LENGTH_SHORT).show()
+
+
+            alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                PendingIntent.getBroadcast(
+                    context,
+                    alarmItem.id + dayOfWeek.value,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
             )
-        )
+        }
     }
 
     override fun cancel(alarmItem: AlarmItem) {
-        Toast.makeText(context, "canceled: ${alarmItem.time.time}", Toast.LENGTH_SHORT).show()
-        alarmManager.cancel(
-            PendingIntent.getBroadcast(
-                context,
-                alarmItem.id,
-                Intent(context, AlarmReceiver::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+
+        for (day in alarmItem.daysOfWeek) {
+            alarmManager.cancel(
+                PendingIntent.getBroadcast(
+                    context,
+                    alarmItem.id + day.value,
+                    Intent(context, AlarmReceiver::class.java),
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
             )
-        )
+        }
     }
 }

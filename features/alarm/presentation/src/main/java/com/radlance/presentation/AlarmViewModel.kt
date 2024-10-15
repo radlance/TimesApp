@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,14 +94,6 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun schedule(alarmItem: AlarmItem) {
-        alarmItem.daysOfWeek.forEach { dayOfWeek ->
-
-            val updatedTime = alarmItem.time.apply {
-                set(Calendar.DAY_OF_WEEK, dayOfWeek.value + 1)
-            }
-
-            val updatedItem = alarmItem.copy(time = updatedTime)
-            alarmScheduler.schedule(updatedItem)
-        }
+        alarmScheduler.schedule(alarmItem)
     }
 }
