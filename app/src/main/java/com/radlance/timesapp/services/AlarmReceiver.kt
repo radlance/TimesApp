@@ -7,12 +7,26 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import com.radlance.database.TimesDao
 import com.radlance.timesapp.R
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AlarmReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var dao: TimesDao
 
     override fun onReceive(context: Context?, intent: Intent?) {
         showNotification(context)
+        val alarmItemId = intent?.getIntExtra("extraAlarmItemId", -1) ?: -1
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.disableAlarmById(alarmItemId)
+        }
     }
 
     private fun showNotification(context: Context?) {

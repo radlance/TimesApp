@@ -17,7 +17,9 @@ class AndroidAlarmScheduler @Inject constructor(
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(alarmItem: AlarmItem) {
-        val intent = Intent(context, AlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("extraAlarmItemId", alarmItem.id)
+        }
 
         alarmItem.daysOfWeek.forEach { dayOfWeek ->
             val calendar = Calendar.getInstance().apply {
