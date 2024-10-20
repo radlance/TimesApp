@@ -7,6 +7,8 @@ interface AlarmRepository {
 
     suspend fun getLastAlarmItem(): AlarmItem
 
+    suspend fun getAlarmItemById(id: Int): AlarmItem
+
     suspend fun updateAlarmItem(alarmItem: AlarmItem)
 
     suspend fun addAlarmItems(alarmItems: List<AlarmItem>)

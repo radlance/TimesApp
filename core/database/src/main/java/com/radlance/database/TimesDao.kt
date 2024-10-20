@@ -14,7 +14,7 @@ interface TimesDao {
     fun getAlarmItems(): Flow<List<AlarmItemEntity>>
 
     @Query("SELECT * FROM alarm_item WHERE id = :id")
-    fun getAlarmItemById(id: Int): AlarmItemEntity
+    suspend fun getAlarmItemById(id: Int): AlarmItemEntity
 
     @Query("SELECT * FROM alarm_item ORDER BY id DESC LIMIT 1")
     suspend fun getLastAlarmItem(): AlarmItemEntity

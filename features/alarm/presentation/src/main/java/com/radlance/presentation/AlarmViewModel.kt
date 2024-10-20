@@ -89,7 +89,11 @@ class AlarmViewModel @Inject constructor(
 
     fun updateAlarm(alarmItem: AlarmItem) {
         viewModelScope.launch {
+            alarmScheduler.cancel(alarmRepository.getAlarmItemById(alarmItem.id))
             alarmRepository.updateAlarmItem(alarmItem)
+            if (alarmItem.isEnabled) {
+                alarmScheduler.schedule(alarmItem)
+            }
         }
     }
 
