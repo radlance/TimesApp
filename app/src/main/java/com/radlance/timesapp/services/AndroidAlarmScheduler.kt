@@ -4,10 +4,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.text.format.DateFormat
 import android.widget.Toast
 import com.radlance.domain.AlarmItem
 import com.radlance.presentation.AlarmScheduler
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 class AndroidAlarmScheduler @Inject constructor(
@@ -29,7 +32,12 @@ class AndroidAlarmScheduler @Inject constructor(
                     add(Calendar.WEEK_OF_YEAR, 1)
                 }
             }
-            Toast.makeText(context, "scheduled: ${calendar.time}", Toast.LENGTH_SHORT).show()
+            val is24HourFormat = DateFormat.is24HourFormat(context)
+            val pattern = if(is24HourFormat) "dd.MM.yyyy HH:mm:ss" else "dd.MM.yyyy hh:mm:ss a"
+            val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+            val formattedTime = sdf.format(alarmItem.time.time)
+
+            Toast.makeText(context, "scheduled: $formattedTime", Toast.LENGTH_LONG).show()
 
 
             alarmManager.setExact(

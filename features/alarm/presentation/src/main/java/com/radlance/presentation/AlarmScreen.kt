@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.radlance.presentation.components.AlarmList
 import com.radlance.presentation.components.AlarmSetupComponent
 
 @Composable
