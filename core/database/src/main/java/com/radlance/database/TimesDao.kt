@@ -13,6 +13,9 @@ interface TimesDao {
     @Query("SELECT * FROM alarm_item")
     fun getAlarmItems(): Flow<List<AlarmItemEntity>>
 
+    @Query("SELECT * FROM alarm_item WHERE id = :id")
+    fun getAlarmItemById(id: Int): AlarmItemEntity
+
     @Query("UPDATE alarm_item SET enabled = 0 WHERE id = :id")
     suspend fun disableAlarmById(id: Int)
 

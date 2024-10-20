@@ -25,7 +25,16 @@ class AlarmReceiver : BroadcastReceiver() {
         showNotification(context)
         val alarmItemId = intent?.getIntExtra("extraAlarmItemId", -1) ?: -1
         CoroutineScope(Dispatchers.IO).launch {
-            dao.disableAlarmById(alarmItemId)
+            val alarmItem = dao.getAlarmItemById(alarmItemId)
+            val incrementedTriggeredDayCount = alarmItem.currentCountOfTriggering.inc()
+
+            if (alarmItem.daysOfWeek.size == incrementedTriggeredDayCount) {
+                dao.disableAlarmById(alarmItemId)
+            } else {
+                dao.updateAlarmItem(
+                    alarmItem.copy(currentCountOfTriggering = incrementedTriggeredDayCount)
+                )
+            }
         }
     }
 
