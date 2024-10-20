@@ -2,12 +2,14 @@ package com.radlance.timesapp.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.radlance.database.TimesDao
+import com.radlance.timesapp.MainActivity
 import com.radlance.timesapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +44,16 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager =
             context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        val intent = Intent(context, MainActivity::class.java).apply {
+            putExtra("EXTRA_SCREEN", "ALARM")
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            5,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
 
         val importance = NotificationManager.IMPORTANCE_HIGH
 
@@ -59,7 +71,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setSmallIcon(R.drawable.ic_alarm)
             .setContentTitle("Alarm triggered")
             .setContentText("Wake up!")
-
+            .setContentIntent(pendingIntent)
 
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
     }

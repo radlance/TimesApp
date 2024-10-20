@@ -20,32 +20,22 @@ fun CommonNavGraph(
     NavHost(
         navController = navController,
         startDestination = when (navigateTo) {
-            null -> {
-                Time
-            }
-            "STOPWATCH" -> {
-                StopWatch
-            }
-            else -> {
-                Timer
-            }
+            null -> { Time }
+
+            "STOPWATCH" -> { StopWatch }
+
+            "ALARM" -> { Alarm }
+
+            else -> { Timer }
         },
         modifier = modifier
     ) {
-        composable<Time> {
-            TimeScreen()
-        }
+        composable<Time> { TimeScreen() }
 
-        composable<StopWatch> {
-            Stopwatch()
-        }
+        composable<StopWatch> { Stopwatch() }
 
-        composable<Timer> {
-            CountdownTimer()
-        }
+        composable<Timer> { CountdownTimer() }
 
-        composable<Alarm> {
-            AlarmScreen()
-        }
+        composable<Alarm> { AlarmScreen() }
     }
 }
