@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.radlance.domain.AlarmItem
 import com.radlance.domain.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +45,7 @@ class AlarmViewModel @Inject constructor(
         viewModelScope.launch {
             alarmRepository.updateAlarmItem(alarmItem.copy(isEnabled = enabled))
             if (enabled) {
-                schedule(alarmItem)
+                alarmScheduler.schedule(alarmItem)
             } else {
                 alarmScheduler.cancel(alarmItem)
             }
@@ -54,6 +55,11 @@ class AlarmViewModel @Inject constructor(
     fun addAlarmItem(alarmItem: AlarmItem) {
         viewModelScope.launch {
             alarmRepository.addAlarmItem(alarmItem)
+            val lastAlarmItem = async {
+                alarmRepository.getLastAlarmItem()
+            }.await()
+
+            alarmScheduler.schedule(lastAlarmItem)
         }
     }
 
@@ -93,7 +99,4 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
-    fun schedule(alarmItem: AlarmItem) {
-        alarmScheduler.schedule(alarmItem)
-    }
 }

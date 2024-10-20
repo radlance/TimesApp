@@ -16,6 +16,9 @@ interface TimesDao {
     @Query("SELECT * FROM alarm_item WHERE id = :id")
     fun getAlarmItemById(id: Int): AlarmItemEntity
 
+    @Query("SELECT * FROM alarm_item ORDER BY id DESC LIMIT 1")
+    suspend fun getLastAlarmItem(): AlarmItemEntity
+
     @Query("UPDATE alarm_item SET enabled = 0 WHERE id = :id")
     suspend fun disableAlarmById(id: Int)
 

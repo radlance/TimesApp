@@ -92,7 +92,6 @@ fun AlarmScreen(
                         },
                         onOkClicked = { alarmItem ->
                             viewModel.addAlarmItem(alarmItem = alarmItem)
-                            viewModel.schedule(alarmItem)
                         }
                     )
                 } else {

@@ -12,6 +12,10 @@ class AlarmRepositoryImpl @Inject constructor(private val dao: TimesDao) : Alarm
         return dao.getAlarmItems().map { entityList -> entityList.map { it.toAlarmItem() } }
     }
 
+    override suspend fun getLastAlarmItem(): AlarmItem {
+        return dao.getLastAlarmItem().toAlarmItem()
+    }
+
     override suspend fun updateAlarmItem(alarmItem: AlarmItem) {
         dao.updateAlarmItem(alarmItem.toAlarmItemEntity())
     }
