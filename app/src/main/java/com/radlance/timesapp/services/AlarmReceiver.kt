@@ -25,17 +25,23 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         showNotification(context)
-        val alarmItemId = intent?.getIntExtra("extraAlarmItemId", -1) ?: -1
-        CoroutineScope(Dispatchers.IO).launch {
-            val alarmItem = dao.getAlarmItemById(alarmItemId)
-            val incrementedTriggeredDayCount = alarmItem.currentCountOfTriggering.inc()
+        if (intent?.action == INTENT_FLAG_CLOSE) {
+            val notificationManager =
+                context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(NOTIFICATION_ID)
+        } else {
+            val alarmItemId = intent?.getIntExtra("extraAlarmItemId", -1) ?: -1
+            CoroutineScope(Dispatchers.IO).launch {
+                val alarmItem = dao.getAlarmItemById(alarmItemId)
+                val incrementedTriggeredDayCount = alarmItem.currentCountOfTriggering.inc()
 
-            if (alarmItem.daysOfWeek.size == incrementedTriggeredDayCount) {
-                dao.disableAlarmById(alarmItemId)
-            } else {
-                dao.updateAlarmItem(
-                    alarmItem.copy(currentCountOfTriggering = incrementedTriggeredDayCount)
-                )
+                if (alarmItem.daysOfWeek.size == incrementedTriggeredDayCount) {
+                    dao.disableAlarmById(alarmItemId)
+                } else {
+                    dao.updateAlarmItem(
+                        alarmItem.copy(currentCountOfTriggering = incrementedTriggeredDayCount)
+                    )
+                }
             }
         }
     }
@@ -52,6 +58,16 @@ class AlarmReceiver : BroadcastReceiver() {
             context,
             5,
             intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+        val closeIntent = Intent(context, AlarmReceiver::class.java).apply {
+            action = INTENT_FLAG_CLOSE
+        }
+        val closePendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            closeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
 
@@ -72,11 +88,15 @@ class AlarmReceiver : BroadcastReceiver() {
             .setContentTitle("Alarm triggered")
             .setContentText("Wake up!")
             .setContentIntent(pendingIntent)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .addAction(R.drawable.ic_alarm, "Close", closePendingIntent)
 
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
     }
 
     private companion object {
+        const val INTENT_FLAG_CLOSE = "CLOSE_NOTIFICATION"
         const val NOTIFICATION_ID = 5
         const val CHANNEL_ID = "5"
         const val CHANNEL_NAME = "Alarm channel"
