@@ -35,7 +35,7 @@ class AndroidAlarmScheduler @Inject constructor(
             val is24HourFormat = DateFormat.is24HourFormat(context)
             val pattern = if(is24HourFormat) "dd.MM.yyyy HH:mm:ss" else "dd.MM.yyyy hh:mm:ss a"
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
-            val formattedTime = sdf.format(alarmItem.time.time)
+            val formattedTime = sdf.format(calendar.time.time)
 
             Toast.makeText(context, "scheduled: $formattedTime", Toast.LENGTH_LONG).show()
 
