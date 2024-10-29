@@ -27,10 +27,10 @@ fun formatMillis(ms: Long, includeMillis: Boolean = false): String {
     }
 }
 
-fun <T> Flow<T>.observe(
+inline fun <T> Flow<T>.observe(
     lifecycleOwner: LifecycleOwner,
     state: Lifecycle.State = Lifecycle.State.STARTED,
-    observer: (T) -> Unit
+    crossinline observer: (T) -> Unit
 ) {
     lifecycleOwner.lifecycleScope.launch {
         flowWithLifecycle(lifecycleOwner.lifecycle, state).collect { value ->
