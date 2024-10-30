@@ -1,12 +1,11 @@
 package com.radlance.timesapp.services
 
-import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
 import android.media.RingtoneManager
-import android.os.IBinder
+import androidx.lifecycle.LifecycleService
 
-class AlarmSoundService : Service() {
+class AlarmSoundService : LifecycleService() {
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -20,14 +19,11 @@ class AlarmSoundService : Service() {
                 start()
             }
         }
-        return START_STICKY
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         mediaPlayer?.let {
             if (it.isPlaying) {
                 it.stop()
@@ -35,6 +31,5 @@ class AlarmSoundService : Service() {
                 mediaPlayer = null
             }
         }
-        super.onDestroy()
     }
 }

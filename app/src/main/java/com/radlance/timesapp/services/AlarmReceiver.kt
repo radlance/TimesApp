@@ -23,16 +23,15 @@ class AlarmReceiver : BroadcastReceiver() {
     lateinit var dao: TimesDao
 
     override fun onReceive(context: Context?, intent: Intent?) {
+        val serviceIntent = Intent(context, AlarmSoundService::class.java)
+
         if (intent?.action == INTENT_FLAG_CLOSE) {
-            val serviceIntent = Intent(context, AlarmSoundService::class.java)
             context?.stopService(serviceIntent)
             val notificationManager =
                 context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(NOTIFICATION_ID)
         } else {
             showNotification(context)
-
-            val serviceIntent = Intent(context, AlarmSoundService::class.java)
             context?.startService(serviceIntent)
 
             val alarmItemId = intent?.getIntExtra("extraAlarmItemId", -1) ?: -1
