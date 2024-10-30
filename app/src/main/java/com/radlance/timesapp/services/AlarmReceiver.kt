@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.radlance.database.TimesDao
 import com.radlance.timesapp.MainActivity
@@ -24,12 +23,18 @@ class AlarmReceiver : BroadcastReceiver() {
     lateinit var dao: TimesDao
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        showNotification(context)
         if (intent?.action == INTENT_FLAG_CLOSE) {
+            val serviceIntent = Intent(context, AlarmSoundService::class.java)
+            context?.stopService(serviceIntent)
             val notificationManager =
                 context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(NOTIFICATION_ID)
         } else {
+            showNotification(context)
+
+            val serviceIntent = Intent(context, AlarmSoundService::class.java)
+            context?.startService(serviceIntent)
+
             val alarmItemId = intent?.getIntExtra("extraAlarmItemId", -1) ?: -1
             CoroutineScope(Dispatchers.IO).launch {
                 val alarmItem = dao.getAlarmItemById(alarmItemId)
@@ -73,14 +78,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val importance = NotificationManager.IMPORTANCE_HIGH
 
-        val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        val mChannel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
-            setSound(
-                alarmSound,
-                null
-            )
-        }
-
+        val mChannel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
         notificationManager.createNotificationChannel(mChannel)
 
         val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)

@@ -13,7 +13,7 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-class AndroidAlarmScheduler @Inject constructor(
+class AlarmScheduler @Inject constructor(
     private val context: Context
 ): AlarmScheduler {
 

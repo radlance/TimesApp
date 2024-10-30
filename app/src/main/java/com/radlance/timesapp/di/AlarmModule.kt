@@ -1,7 +1,5 @@
 package com.radlance.timesapp.di
 
-import com.radlance.presentation.AlarmScheduler
-import com.radlance.timesapp.services.AndroidAlarmScheduler
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -11,5 +9,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface AlarmModule {
     @Binds
-    fun provideScheduler(alarmScheduler: AndroidAlarmScheduler): AlarmScheduler
+    fun provideScheduler(alarmScheduler: com.radlance.timesapp.services.AlarmScheduler): com.radlance.presentation.AlarmScheduler
 }

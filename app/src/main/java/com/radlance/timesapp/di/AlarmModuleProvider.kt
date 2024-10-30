@@ -5,7 +5,7 @@ import com.radlance.data.AlarmRepositoryImpl
 import com.radlance.database.TimesDao
 import com.radlance.database.TimesDatabase
 import com.radlance.domain.AlarmRepository
-import com.radlance.timesapp.services.AndroidAlarmScheduler
+import com.radlance.timesapp.services.AlarmScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,8 +18,8 @@ import javax.inject.Singleton
 object AlarmModuleProvider {
     @Singleton
     @Provides
-    fun provideAndroidAlarmScheduler(@ApplicationContext context: Context): AndroidAlarmScheduler {
-        return AndroidAlarmScheduler(context)
+    fun provideAndroidAlarmScheduler(@ApplicationContext context: Context): AlarmScheduler {
+        return AlarmScheduler(context)
     }
 
     @Singleton
