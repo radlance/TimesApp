@@ -22,10 +22,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
-            android:theme="@style/Theme.TimesApp"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            android:theme="@style/Theme.TimesApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,6 @@
 [versions]
 agp = "8.6.1"
 androidx-compose-runtime = "1.7.4"
-datastorePreferences = "1.1.1"
 javaxInject = "1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
@@ -53,6 +52,7 @@ androidx-material-icons-extended = {  group = "androidx.compose.material", name 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidx-compose-runtime" }
+androidx-material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }
 
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }

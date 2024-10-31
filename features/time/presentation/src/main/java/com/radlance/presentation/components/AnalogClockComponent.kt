@@ -35,6 +35,7 @@ fun AnalogClockComponent(
     hour: Int,
     minute: Int,
     second: Int,
+    modifier: Modifier = Modifier,
 ) {
     val isDarkTheme = isSystemInDarkTheme()
 
@@ -54,7 +55,7 @@ fun AnalogClockComponent(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(fraction = 0.6f)
             .aspectRatio(1f)
             .clip(CircleShape)

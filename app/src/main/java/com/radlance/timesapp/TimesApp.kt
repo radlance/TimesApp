@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,15 +14,24 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.radlance.timesapp.navigation.Alarm
 import com.radlance.timesapp.navigation.CommonNavGraph
 import com.radlance.timesapp.navigation.NavigationState
-import com.radlance.timesapp.navigation.Time
 import com.radlance.timesapp.navigation.StopWatch
+import com.radlance.timesapp.navigation.Time
 import com.radlance.timesapp.navigation.Timer
 import com.radlance.timesapp.navigation.rememberNavigationState
+import com.radlance.uikit.ContentType
 import com.radlance.uikit.TimesAppTheme
 
 @Composable
-fun TimesApp(navigateTo: String?) {
+fun TimesApp(
+    navigateTo: String?,
+    windowSize: WindowWidthSizeClass
+) {
     val navigationState = rememberNavigationState()
+    val contentType = if(windowSize == WindowWidthSizeClass.Compact) {
+        ContentType.Default
+    } else {
+        ContentType.Expanded
+    }
 
     TimesAppTheme {
         Scaffold(
@@ -30,6 +40,7 @@ fun TimesApp(navigateTo: String?) {
             CommonNavGraph(
                 navController = navigationState.navHostController,
                 navigateTo = navigateTo,
+                contentType = contentType,
                 modifier = Modifier.padding(innerPadding)
             )
         }

@@ -9,12 +9,14 @@ import com.radlance.presentation.AlarmScreen
 import com.radlance.presentation.CountdownTimer
 import com.radlance.presentation.Stopwatch
 import com.radlance.presentation.TimeScreen
+import com.radlance.uikit.ContentType
 
 
 @Composable
 fun CommonNavGraph(
     navController: NavHostController,
     navigateTo: String?,
+    contentType: ContentType,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -30,7 +32,7 @@ fun CommonNavGraph(
         },
         modifier = modifier
     ) {
-        composable<Time> { TimeScreen() }
+        composable<Time> { TimeScreen(contentType = contentType) }
 
         composable<StopWatch> { Stopwatch() }
 
