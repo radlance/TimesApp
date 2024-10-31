@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -29,7 +30,9 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
     TimerAdditionalAction {
 
     private lateinit var notificationManager: NotificationManager
+
     private var initialMilliSeconds = 0L
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -65,6 +68,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                     resetCountdownTimer()
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
+                    notificationManager.cancelAll()
                 }
             }
         }
@@ -110,34 +114,54 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
             if (_remainingMilliSeconds.value <= 0) {
                 resetCountdownTimer()
                 stopForeground(STOP_FOREGROUND_REMOVE)
-                notificationManager.cancel(NOTIFICATION_ID)
-                stopSelf()
-
                 showFinishNotification()
             }
         }
     }
 
     private fun showFinishNotification() {
+
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(
+                this,
+                Uri.parse(
+                    "android.resource://" + packageName + "/" + R.raw.timer
+                )
+            ).apply {
+                isLooping = true
+                start()
+            }
+        }
+
         val notificationChannel = NotificationChannel(
             FINISH_NOTIFICATION_CHANNEL_ID,
             FINISH_NOTIFICATION_CHANNEL_NAME,
             NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            setSound(
-                Uri.parse(
-                    "android.resource://" + packageName + "/" + R.raw.timer
-                ), null
-            )
+        )
+
+        val stopIntent = Intent(this, CountdownTimerService::class.java).also {
+            it.action = ServiceState.RESET.name
         }
 
-        notificationManager.createNotificationChannel(notificationChannel)
+        val pendingStopIntent = PendingIntent.getService(
+            this,
+            3,
+            stopIntent,
+            PendingIntent.FLAG_MUTABLE
+        )
 
         val builder = NotificationCompat.Builder(this, FINISH_NOTIFICATION_CHANNEL_ID)
+            .setOngoing(true)
+            .setAutoCancel(false)
             .setSmallIcon(R.drawable.ic_timer)
             .setContentTitle(getString(R.string.time_over))
             .setContentIntent(getTimerPendingIntent())
             .setContentText(getString(R.string.timer_has_finished))
+            .addAction(
+                R.drawable.ic_timer,
+                getString(R.string.stop),
+                pendingStopIntent
+            )
 
         notificationManager.createNotificationChannel(notificationChannel)
         notificationManager.notify(NOTIFICATION_ID, builder.build())
@@ -186,7 +210,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
         val notificationChannel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_LOW
         )
 
         notificationManager.createNotificationChannel(notificationChannel)
@@ -240,6 +264,17 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                 pendingStopIntent
             )
             .build()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.stop()
+                it.release()
+                mediaPlayer = null
+            }
+        }
     }
 
     companion object {
