@@ -227,7 +227,7 @@ private fun VerticalColon() {
     Text(
         text = stringResource(R.string.vertical_colon),
         fontSize = 48.sp,
-        fontWeight = FontWeight.ExtraLight,
+        fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }

@@ -4,6 +4,6 @@
     <string name="start">start</string>
     <string name="reset">reset</string>
     <string name="resume">resume</string>
-    <string name="horizontal_colon">. .</string>
+    <string name="horizontal_colon">• •</string>
     <string name="vertical_colon">:</string>
 </resources>

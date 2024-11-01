@@ -138,7 +138,11 @@ fun WeekDaySelector(
     ) {
         items(items = daysOfWeek) { day ->
             val isSelected = selectedDays.contains(day)
-            val textColor = if (isSelected) Color.White else Color.Black
+            val textColor = if(isSelected) {
+                MaterialTheme.colorScheme.surface
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
             val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent
             val animatedTextColor = animateColorAsState(targetValue = textColor, label = "")
             val animatedBackgroundColor = animateColorAsState(targetValue = backgroundColor, label = "")
