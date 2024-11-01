@@ -27,10 +27,10 @@ fun TimesApp(
     windowSize: WindowWidthSizeClass
 ) {
     val navigationState = rememberNavigationState()
-    val contentType = if(windowSize == WindowWidthSizeClass.Compact) {
-        ContentType.Default
-    } else {
+    val contentType = if(windowSize == WindowWidthSizeClass.Expanded) {
         ContentType.Expanded
+    } else {
+        ContentType.Default
     }
 
     TimesAppTheme {
