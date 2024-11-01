@@ -36,7 +36,7 @@ fun CommonNavGraph(
 
         composable<StopWatch> { StopwatchScreen(contentType = contentType) }
 
-        composable<Timer> { CountdownTimer() }
+        composable<Timer> { CountdownTimer(contentType = contentType) }
 
         composable<Alarm> { AlarmScreen() }
     }

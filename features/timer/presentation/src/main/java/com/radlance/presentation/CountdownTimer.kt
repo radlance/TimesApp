@@ -9,9 +9,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.radlance.time.core.ServiceState
+import com.radlance.uikit.ContentType
 
 @Composable
 fun CountdownTimer(
+    contentType: ContentType,
     viewModel: CountdownTimerViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -35,7 +37,8 @@ fun CountdownTimer(
 
                 viewModel.setCountDownTimer(totalMilliseconds.toLong())
                 viewModel.commandService(context, ServiceState.START_OR_RESUME)
-            }
+            },
+            contentType = contentType
         )
     } else {
         ProgressScreen(
