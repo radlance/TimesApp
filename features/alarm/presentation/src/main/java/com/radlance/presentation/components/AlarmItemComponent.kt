@@ -39,7 +39,7 @@ fun AlarmItemComponent(
         modifier = modifier
             .height(120.dp)
             .clickable { onItemClicked() },
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(18.dp)
     ) {
         Row(
             modifier = Modifier

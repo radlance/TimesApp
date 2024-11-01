@@ -33,7 +33,7 @@ fun AlarmList(
                     onItemClicked = { onItemClicked(item) },
                     onCheckedChange = { onCheckedChange(item, it) },
                     checked = item.isEnabled,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
                 )
             }
         }
