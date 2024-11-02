@@ -111,7 +111,7 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
                 }
                 delay(10)
             }
-            if (_remainingMilliSeconds.value <= 0) {
+            if (_remainingMilliSeconds.value <= 0 && isTracking.value) {
                 resetCountdownTimer()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 showFinishNotification()
@@ -120,7 +120,6 @@ class CountdownTimerService @Inject constructor() : LifecycleService(),
     }
 
     private fun showFinishNotification() {
-
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer.create(
                 this,
