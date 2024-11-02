@@ -27,9 +27,10 @@ class AlarmScheduler @Inject constructor(
         alarmItem.daysOfWeek.forEach { dayOfWeek ->
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = alarmItem.time.timeInMillis
+                set(Calendar.WEEK_OF_YEAR, Calendar.getInstance().get(Calendar.WEEK_OF_YEAR))
                 set(Calendar.DAY_OF_WEEK, dayOfWeek.value + 1)
                 if (timeInMillis < System.currentTimeMillis()) {
-                    add(Calendar.WEEK_OF_YEAR, 1)
+                    set(Calendar.WEEK_OF_YEAR, Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) + 1)
                 }
             }
             val is24HourFormat = DateFormat.is24HourFormat(context)
