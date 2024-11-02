@@ -31,7 +31,7 @@ import com.radlance.uikit.AnalogClockSecondHandColorDark
 import kotlin.math.min
 
 @Composable
-fun AnalogClockComponent(
+internal fun AnalogClockComponent(
     hour: Int,
     minute: Int,
     second: Int,

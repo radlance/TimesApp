@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.radlance.domain.AlarmItem
 
 @Composable
-fun AlarmList(
+internal fun AlarmList(
     alarmItems: List<AlarmItem>,
     onItemClicked: (AlarmItem) -> Unit,
     onCheckedChange: (AlarmItem, Boolean) -> Unit,

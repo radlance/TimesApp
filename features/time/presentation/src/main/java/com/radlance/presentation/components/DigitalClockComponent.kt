@@ -15,7 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DigitalClockComponent(
+internal fun DigitalClockComponent(
     hour: Int,
     minute: Int,
     seconds: Int,

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @SuppressLint("SuspiciousModifierThen")
-fun Modifier.shadowCircular(
+internal fun Modifier.shadowCircular(
     color: Color = Color.Black,
     offsetX: Dp = 0.dp,
     offsetY: Dp = 0.dp,

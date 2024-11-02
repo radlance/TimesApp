@@ -18,7 +18,7 @@ import com.radlance.domain.AlarmItem
 import kotlinx.coroutines.delay
 
 @Composable
-fun SwipeToDeleteContainer(
+internal fun SwipeToDeleteContainer(
     item: AlarmItem,
     isLastElement: Boolean,
     onDelete: (AlarmItem) -> Unit,

@@ -28,7 +28,7 @@ import java.util.Calendar
 import java.util.Locale
 
 @Composable
-fun AlarmItemComponent(
+internal fun AlarmItemComponent(
     alarmItem: AlarmItem,
     onItemClicked: () -> Unit,
     onCheckedChange: (Boolean) -> Unit,
