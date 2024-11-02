@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,62 +51,72 @@ internal fun AlarmSetupComponent(
         modifier = modifier.padding(start = 16.dp, end = 16.dp),
         shape = RoundedCornerShape(24.dp)
     ) {
-        Column {
-            Box(
-                modifier = Modifier.padding(top = 32.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    TimePicker(timePickerState)
-                    WeekDaySelector(
-                        selectedDays = alarmItem?.daysOfWeek ?: selectedDaysOfWeek,
-                        onDaySelected = {
-                            if (onDaySelected != null) {
-                                onDaySelected(it)
-                            } else if (selectedDaysOfWeek.contains(it)) {
-                                selectedDaysOfWeek.remove(it)
-                            } else {
-                                selectedDaysOfWeek.add(it)
+        LazyColumn {
+            item {
+                Box(
+                    modifier = Modifier.padding(
+                        top = 32.dp,
+                        bottom = 8.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        TimePicker(timePickerState)
+                        WeekDaySelector(
+                            selectedDays = alarmItem?.daysOfWeek ?: selectedDaysOfWeek,
+                            onDaySelected = {
+                                if (onDaySelected != null) {
+                                    onDaySelected(it)
+                                } else if (selectedDaysOfWeek.contains(it)) {
+                                    selectedDaysOfWeek.remove(it)
+                                } else {
+                                    selectedDaysOfWeek.add(it)
+                                }
                             }
-                        }
-                    )
-                }
-            }
-        }
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            TextButton(onClick = onCancelClicked) {
-                Text(text = stringResource(R.string.cancel), fontSize = 18.sp)
-            }
-            TextButton(
-                enabled = alarmItem?.daysOfWeek?.isNotEmpty() ?: selectedDaysOfWeek.isNotEmpty(),
-                onClick = {
-                    val pickedTime = Calendar.getInstance().apply {
-                        set(Calendar.YEAR, get(Calendar.YEAR))
-                        set(Calendar.MONTH, get(Calendar.MONTH))
-                        set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH))
-                        set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-                        set(Calendar.MINUTE, timePickerState.minute)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
+                        )
                     }
-                    val newAlarmItem = AlarmItem(
-                        time = pickedTime,
-                        daysOfWeek = selectedDaysOfWeek,
-                        message = "",
-                        isEnabled = true
-                    )
-
-                    onOkClicked(alarmItem?.copy(time = pickedTime) ?: newAlarmItem)
-                    onCancelClicked()
                 }
-            ) {
-                Text(text = stringResource(R.string.save), fontSize = 18.sp)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    TextButton(onClick = onCancelClicked) {
+                        Text(text = stringResource(R.string.cancel), fontSize = 18.sp)
+                    }
+                    TextButton(
+                        enabled = alarmItem?.daysOfWeek?.isNotEmpty()
+                            ?: selectedDaysOfWeek.isNotEmpty(),
+                        onClick = {
+                            val pickedTime = Calendar.getInstance().apply {
+                                set(Calendar.YEAR, get(Calendar.YEAR))
+                                set(Calendar.MONTH, get(Calendar.MONTH))
+                                set(Calendar.DAY_OF_MONTH, get(Calendar.DAY_OF_MONTH))
+                                set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+                                set(Calendar.MINUTE, timePickerState.minute)
+                                set(Calendar.SECOND, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }
+                            val newAlarmItem = AlarmItem(
+                                time = pickedTime,
+                                daysOfWeek = selectedDaysOfWeek,
+                                message = "",
+                                isEnabled = true
+                            )
+
+                            onOkClicked(alarmItem?.copy(time = pickedTime) ?: newAlarmItem)
+                            onCancelClicked()
+                        }
+                    ) {
+                        Text(text = stringResource(R.string.save), fontSize = 18.sp)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
