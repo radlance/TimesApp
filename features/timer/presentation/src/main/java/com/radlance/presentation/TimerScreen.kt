@@ -12,7 +12,7 @@ import com.radlance.time.core.ServiceState
 import com.radlance.uikit.ContentType
 
 @Composable
-fun CountdownTimer(
+fun TimerScreen(
     contentType: ContentType,
     viewModel: CountdownTimerViewModel = hiltViewModel()
 ) {
@@ -42,6 +42,7 @@ fun CountdownTimer(
         )
     } else {
         ProgressScreen(
+            contentType = contentType,
             progress = countdownTimerUiState.getPercentProgress(),
             remainingTime = countdownTimerUiState.formatRemainingTime(),
             onResumeClick = { viewModel.commandService(context, ServiceState.START_OR_RESUME) },

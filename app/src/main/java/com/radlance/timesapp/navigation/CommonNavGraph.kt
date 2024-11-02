@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.radlance.presentation.AlarmScreen
-import com.radlance.presentation.CountdownTimer
 import com.radlance.presentation.StopwatchScreen
 import com.radlance.presentation.TimeScreen
+import com.radlance.presentation.TimerScreen
 import com.radlance.uikit.ContentType
 
 
@@ -36,7 +36,7 @@ fun CommonNavGraph(
 
         composable<StopWatch> { StopwatchScreen(contentType = contentType) }
 
-        composable<Timer> { CountdownTimer(contentType = contentType) }
+        composable<Timer> { TimerScreen(contentType = contentType) }
 
         composable<Alarm> { AlarmScreen() }
     }
