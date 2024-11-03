@@ -2,10 +2,12 @@ package com.radlance.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.ZonedDateTime
@@ -19,13 +21,19 @@ class TimeViewModel : ViewModel() {
     val timeUiState: StateFlow<TimeUiState>
         get() = _timeUiState
 
+    private var updateJob: Job? = null
+
     fun startUpdatingTime() {
-        viewModelScope.launch {
-            while (true) {
+        updateJob = viewModelScope.launch {
+            while (isActive) {
                 updateTime()
                 delay(1000)
             }
         }
+    }
+
+    fun stopUpdatingTime() {
+        updateJob?.cancel()
     }
 
     private fun updateTime() {
