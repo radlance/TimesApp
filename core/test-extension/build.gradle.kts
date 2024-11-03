@@ -1,11 +1,11 @@
 plugins {
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.radlance.presentation"
+    namespace = "com.radlance.test.extension"
     compileSdk = 34
 
     defaultConfig {
@@ -25,31 +25,26 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
 
 dependencies {
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(project(":core:uikit"))
-    testImplementation(project(":core:test-extension"))
+    api(libs.kotlinx.coroutines.test)
+    api(libs.ui.test.junit4)
+    debugApi(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.ui.tooling)
 }
