@@ -58,4 +58,5 @@ dependencies {
 
     implementation(project(":features:alarm:domain"))
     implementation(project(":core:uikit"))
+    implementation(project(":core:test-extension"))
 }
