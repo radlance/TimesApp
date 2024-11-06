@@ -26,7 +26,6 @@ class TimesDaoTest {
     private val alarmItem1 = AlarmItemEntity(
         time = Calendar.getInstance(),
         daysOfWeek = listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY),
-        message = "alarmItem1 message",
         isEnabled = true,
         currentCountOfTriggering = 1,
         id = 1
@@ -35,7 +34,6 @@ class TimesDaoTest {
     private val alarmItem2 = AlarmItemEntity(
         time = Calendar.getInstance(),
         daysOfWeek = listOf(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY),
-        message = "alarmItem2 message",
         isEnabled = false,
         currentCountOfTriggering = 2,
         id = 2
@@ -104,7 +102,10 @@ class TimesDaoTest {
     fun daoUpdate_updateAlarmItem_changeAlarmEntityFieldIntoDb() = runBlocking {
         timesDao.addAlarmItems(listOf(alarmItem1, alarmItem2))
 
-        val updatedItem1 = alarmItem1.copy(message = "updated alarmItem1")
+        val updatedItem1 = alarmItem1.copy(
+            currentCountOfTriggering = alarmItem1.currentCountOfTriggering.inc()
+        )
+
         timesDao.updateAlarmItem(updatedItem1)
 
         assertEquals(listOf(updatedItem1, alarmItem2), timesDao.getAlarmItems().first())

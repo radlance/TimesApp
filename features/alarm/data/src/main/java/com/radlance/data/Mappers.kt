@@ -7,7 +7,6 @@ fun AlarmItemEntity.toAlarmItem(): AlarmItem {
     return AlarmItem(
         time = time,
         daysOfWeek = daysOfWeek,
-        message = message,
         isEnabled = isEnabled,
         id = id
     )
@@ -17,7 +16,6 @@ fun AlarmItem.toAlarmItemEntity(): AlarmItemEntity {
     return AlarmItemEntity(
         time = time,
         daysOfWeek = daysOfWeek,
-        message = message,
         isEnabled = isEnabled,
         id = id
     )

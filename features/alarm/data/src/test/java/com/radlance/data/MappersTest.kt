@@ -14,7 +14,6 @@ class MappersTest {
         val alamItemEntity = AlarmItemEntity(
             time = Calendar.getInstance(),
             daysOfWeek = listOf(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY),
-            message = "alarmItemEntity message",
             isEnabled = true,
             currentCountOfTriggering = 1,
             id = 1
@@ -24,7 +23,6 @@ class MappersTest {
 
         assertEquals(alamItemEntity.time, alarmItem.time)
         assertEquals(alamItemEntity.daysOfWeek, alarmItem.daysOfWeek)
-        assertEquals(alamItemEntity.message, alarmItem.message)
         assertEquals(alamItemEntity.isEnabled, alarmItem.isEnabled)
         assertEquals(alamItemEntity.id, alarmItem.id)
     }
@@ -34,7 +32,6 @@ class MappersTest {
         val alamItem = AlarmItem(
             time = Calendar.getInstance(),
             daysOfWeek = listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY),
-            message = "alarmItem message",
             isEnabled = false,
             id = 2
         )
@@ -43,7 +40,6 @@ class MappersTest {
 
         assertEquals(alamItem.time, alarmItemEntity.time)
         assertEquals(alamItem.daysOfWeek, alamItem.daysOfWeek)
-        assertEquals(alamItem.message, alarmItemEntity.message)
         assertEquals(alamItem.isEnabled, alarmItemEntity.isEnabled)
         assertEquals(alamItem.id, alarmItemEntity.id)
     }

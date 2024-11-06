@@ -10,7 +10,6 @@ import java.util.Calendar
 data class AlarmItemEntity(
     val time: Calendar,
     @ColumnInfo(name = "days_of_week") val daysOfWeek: List<DayOfWeek>,
-    val message: String,
     @ColumnInfo(name = "enabled") val isEnabled: Boolean,
     @ColumnInfo(name = "current_count_of_triggering") val currentCountOfTriggering: Int = 0,
     @PrimaryKey(autoGenerate = true) val id: Int = 0

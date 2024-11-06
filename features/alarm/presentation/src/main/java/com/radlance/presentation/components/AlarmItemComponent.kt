@@ -85,7 +85,6 @@ private fun AlarmItemComponentPreview() {
     AlarmItemComponent(
         AlarmItem(
             time = Calendar.getInstance(),
-            message = "test message",
             daysOfWeek = listOf(DayOfWeek.MONDAY),
             isEnabled = true
         ),

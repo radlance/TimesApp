@@ -102,7 +102,6 @@ internal fun AlarmSetupComponent(
                             val newAlarmItem = AlarmItem(
                                 time = pickedTime,
                                 daysOfWeek = selectedDaysOfWeek,
-                                message = "",
                                 isEnabled = true
                             )
 
@@ -128,7 +127,6 @@ private fun AlarmSetupComponentPreview(modifier: Modifier = Modifier) {
         AlarmItem(
             id = 1,
             time = Calendar.getInstance(),
-            message = 1.toString(),
             daysOfWeek = listOf(DayOfWeek.MONDAY),
             isEnabled = false
         ),
